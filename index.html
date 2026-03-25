@@ -7,32 +7,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 :root {
-  --bg:#0f1117; --bg2:#181c27; --bg3:#1e2333;
-  --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.14);
-  --text:#e8eaf0; --muted:#8891a8;
-  --teal:#1bc4a0; --orange:#f07830; --amber:#f5c518;
-  --red:#e84545; --blue:#4a90d9; --purple:#9b7dea; --green:#4caf7a;
-  --radius:12px; --radius-sm:8px;
+  --bg:#0f1117;--bg2:#181c27;--bg3:#1e2333;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#e8eaf0;--muted:#8891a8;
+  --teal:#1bc4a0;--orange:#f07830;--amber:#f5c518;
+  --red:#e84545;--blue:#4a90d9;--purple:#9b7dea;--green:#4caf7a;
+  --radius:12px;--radius-sm:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.5}
 button{font-family:inherit;cursor:pointer}
 input,select,textarea{font-family:inherit}
-
-/* ── Layout ── */
 .app{display:flex;flex-direction:column;min-height:100vh}
 .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:40}
 .header-left .logo{font-size:12px;font-weight:700;color:var(--teal);letter-spacing:1.1px;text-transform:uppercase}
 .header-left .sub{font-size:11px;color:var(--muted);margin-top:1px}
+.header-right{display:flex;align-items:center;gap:10px}
+.sync-badge{font-size:10px;color:var(--muted);background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:3px 8px;white-space:nowrap}
+.sync-badge.error{color:var(--red);border-color:rgba(232,69,69,.3)}
 .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#1bc4a0,#4a90d9);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
 .content{flex:1;overflow-y:auto;padding:16px 14px 90px}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:50;padding-bottom:env(safe-area-inset-bottom,0px)}
 .nav-btn{flex:1;background:transparent;border:none;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px}
 .nav-btn .nav-icon{font-size:20px}
 .nav-btn .nav-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;transition:color .15s}
-.nav-btn .nav-active-bar{width:16px;height:2px;background:var(--teal);border-radius:1px}
-
-/* ── Cards & layout ── */
 .card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
 .card-title{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
 .section-title{font-size:20px;font-weight:600;margin-bottom:4px}
@@ -40,170 +38,122 @@ input,select,textarea{font-family:inherit}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
 .mb16{margin-bottom:16px}
-
-/* ── Stat cards ── */
 .stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
 .stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px}
 .stat-value{font-size:24px;font-weight:600;line-height:1}
 .stat-sub{font-size:10px;color:var(--muted);margin-top:3px}
-
-/* ── Race countdown cards ── */
 .race-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px 10px;text-align:center}
 .race-card-name{font-size:11px;font-weight:600;line-height:1.2;margin-bottom:2px}
 .race-card-date{font-size:10px;color:var(--muted);margin-bottom:8px}
 .race-card-days{font-size:28px;font-weight:700;line-height:1}
 .race-card-daystxt{font-size:9px;color:var(--muted);margin-top:2px;margin-bottom:6px}
 .race-card-dist{font-size:10px;font-weight:600}
-
-/* ── Phase bar ── */
 .phase-bar-track{height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;margin-bottom:6px}
 .phase-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--teal),var(--blue));transition:width .5s}
 .phase-bar-labels{display:flex;justify-content:space-between}
 .phase-bar-labels span{font-size:9px;color:var(--muted)}
-
-/* ── Chart wrappers ── */
 .chart-wrap{position:relative;width:100%}
-
-/* ── Legend ── */
 .legend{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
 .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
 .legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-
-/* ── Log form ── */
-.form-row{display:grid;gap:12px;margin-bottom:12px}
-.form-row.cols-2{grid-template-columns:1fr 1fr}
-.form-row.cols-3{grid-template-columns:1fr 1fr 1fr}
-.field label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
-.field input,.field select,.field textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;color:var(--text);font-size:16px;outline:none;transition:border-color .15s}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--teal)}
-.field select option{background:var(--bg3)}
-.field textarea{min-height:72px;resize:vertical}
-.type-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.type-btn{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 4px;font-size:12px;font-weight:600;color:var(--muted);text-transform:capitalize;transition:all .15s}
-.bar-track{display:flex;gap:3px;margin-top:6px}
-.bar-seg{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.1);transition:background .15s}
-.btn-save{width:100%;background:var(--teal);color:#0f1117;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;margin-top:4px}
-.btn-save:active{opacity:.85}
-
-/* ── Session history cards ── */
+.insight{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:var(--radius-sm);margin-bottom:8px;border:1px solid}
+.insight-red{background:rgba(232,69,69,.08);border-color:rgba(232,69,69,.25)}
+.insight-amber{background:rgba(245,197,24,.06);border-color:rgba(245,197,24,.2)}
+.insight-green{background:rgba(76,175,122,.06);border-color:rgba(76,175,122,.2)}
+.insight-blue{background:rgba(74,144,217,.06);border-color:rgba(74,144,217,.2)}
+.insight-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.insight-text{font-size:13px;line-height:1.5}
+.insight-title{font-weight:600;margin-bottom:2px}
+.heatmap-wrap{overflow-x:auto;padding-bottom:4px}
+.heatmap-grid{display:grid;gap:3px;width:max-content}
+.heatmap-month-labels{display:grid;gap:3px;margin-bottom:4px;width:max-content}
+.hm-cell{width:13px;height:13px;border-radius:2px;position:relative}
+.hm-cell:hover .hm-tip{display:block}
+.hm-tip{display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:5px 8px;font-size:10px;white-space:nowrap;z-index:10;pointer-events:none}
+.heatmap-legend{display:flex;align-items:center;gap:5px;margin-top:8px;font-size:10px;color:var(--muted);flex-wrap:wrap}
 .session-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-.session-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
 .session-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .session-mini-cell{background:rgba(255,255,255,.03);border-radius:8px;padding:8px 10px}
 .session-mini-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
 .session-mini-value{font-size:15px;font-weight:600}
 .session-notes{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
-
-/* ── Week accordion ── */
-.week-card{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden}
+.week-card{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;background:var(--bg3)}
 .week-card.current{border-color:var(--teal);background:rgba(27,196,160,.04)}
-.week-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.week-header{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
 .week-header-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .week-num{font-size:14px;font-weight:700}
 .week-date{font-size:10px;color:var(--muted)}
 .phase-tag{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;background:rgba(74,144,217,.15);color:var(--blue)}
-.week-chevron{color:var(--muted);font-size:14px;transition:transform .2s;flex-shrink:0}
+.week-chevron{color:var(--muted);font-size:14px;flex-shrink:0}
 .week-body{padding:0 14px 14px}
 .week-row{display:flex;gap:10px;padding:7px 0;border-top:1px solid rgba(255,255,255,.04)}
 .week-row-day{font-size:11px;font-weight:600;color:var(--muted);width:28px;flex-shrink:0;padding-top:1px}
 .week-row-session{font-size:13px}
-
-/* ── Race guide ── */
-.race-guide-card{margin-bottom:16px}
-.race-guide-header{display:flex;align-items:center;gap:8px;margin-bottom:14px}
-.race-guide-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.race-guide-name{font-size:15px;font-weight:600}
-.race-guide-date{font-size:11px;color:var(--muted)}
 .race-guide-row{font-size:13px;color:var(--muted);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.04)}
 .race-guide-row strong{color:var(--text);font-weight:500}
 .race-week-row{font-size:13px;color:var(--muted);margin-bottom:5px;padding-left:10px;border-left:2px solid rgba(255,255,255,.08)}
-
-/* ── Loading / error states ── */
+.config-wrap{max-width:480px;margin:0 auto}
+.config-step{display:flex;gap:12px;margin-bottom:14px;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius)}
+.config-step-num{width:24px;height:24px;border-radius:50%;background:var(--teal);color:#0f1117;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.config-step-body{font-size:13px;line-height:1.6;color:var(--muted)}
+.config-step-body strong{color:var(--text)}
+.config-step-body code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px;font-size:12px;color:var(--teal)}
+.config-url-input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);font-size:13px;outline:none;margin-top:6px}
+.config-url-input:focus{border-color:var(--teal)}
+.btn-config-save{background:var(--teal);color:#0f1117;border:none;border-radius:var(--radius-sm);padding:12px 24px;font-size:14px;font-weight:700;width:100%;margin-top:8px}
+.btn-refresh{background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 16px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.error-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:14px;text-align:center;padding:24px}
+.error-icon{font-size:40px;opacity:.6}
+.error-title{font-size:16px;font-weight:600}
+.error-sub{font-size:13px;color:var(--muted);max-width:280px;line-height:1.6}
+.btn-error-action{background:var(--teal);color:#0f1117;border:none;border-radius:var(--radius-sm);padding:10px 24px;font-size:13px;font-weight:700}
 .loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;gap:12px;color:var(--muted)}
 .spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .empty-state{text-align:center;padding:60px 24px;color:var(--muted)}
 .empty-icon{font-size:40px;opacity:.4;margin-bottom:12px}
 .empty-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
-
-/* ── Config screen ── */
-.config-wrap{max-width:480px;margin:0 auto}
-.config-url-input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);font-size:13px;outline:none;margin-top:6px;word-break:break-all}
-.config-url-input:focus{border-color:var(--teal)}
-.config-step{display:flex;gap:12px;margin-bottom:16px;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius)}
-.config-step-num{width:24px;height:24px;border-radius:50%;background:var(--teal);color:#0f1117;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.config-step-body{font-size:13px;line-height:1.6;color:var(--muted)}
-.config-step-body strong{color:var(--text)}
-.config-step-body code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px;font-size:12px;color:var(--teal)}
-.btn-config-save{background:var(--teal);color:#0f1117;border:none;border-radius:var(--radius-sm);padding:12px 24px;font-size:14px;font-weight:700;width:100%;margin-top:8px}
-.btn-refresh{background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px 16px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.btn-refresh:active{opacity:.7}
-
-/* ── Toast ── */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:100;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4);opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
-
-/* ── Completion dots ── */
-.completion-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.comp-dot{width:10px;height:10px;border-radius:50%}
 </style>
 </head>
 <body>
 <div class="app">
-
   <header class="header">
     <div class="header-left">
       <div class="logo">Elite Endurance</div>
       <div class="sub" id="hdr-sub">Paul Carroll · Loading...</div>
     </div>
-    <div class="avatar">PC</div>
+    <div class="header-right">
+      <div class="sync-badge" id="sync-badge" style="display:none"></div>
+      <div class="avatar">PC</div>
+    </div>
   </header>
-
   <main class="content" id="content">
     <div class="loading-state"><div class="spinner"></div><span>Loading dashboard...</span></div>
   </main>
-
-  <nav class="bottom-nav" id="bottom-nav">
-    <button class="nav-btn" onclick="navigate('overview')">
-      <span class="nav-icon">📊</span>
-      <span class="nav-label" id="nl-overview">Overview</span>
-    </button>
-    <button class="nav-btn" onclick="navigate('history')">
-      <span class="nav-icon">📋</span>
-      <span class="nav-label" id="nl-history">History</span>
-    </button>
-    <button class="nav-btn" onclick="navigate('load')">
-      <span class="nav-icon">⚡</span>
-      <span class="nav-label" id="nl-load">Load</span>
-    </button>
-    <button class="nav-btn" onclick="navigate('plan')">
-      <span class="nav-icon">📅</span>
-      <span class="nav-label" id="nl-plan">Plan</span>
-    </button>
-    <button class="nav-btn" onclick="navigate('races')">
-      <span class="nav-icon">🏁</span>
-      <span class="nav-label" id="nl-races">Races</span>
-    </button>
-    <button class="nav-btn" onclick="navigate('setup')">
-      <span class="nav-icon">⚙️</span>
-      <span class="nav-label" id="nl-setup">Setup</span>
-    </button>
+  <nav class="bottom-nav">
+    <button class="nav-btn" onclick="navigate('overview')"><span class="nav-icon">📊</span><span class="nav-label" id="nl-overview">Overview</span></button>
+    <button class="nav-btn" onclick="navigate('history')"><span class="nav-icon">📋</span><span class="nav-label" id="nl-history">History</span></button>
+    <button class="nav-btn" onclick="navigate('load')"><span class="nav-icon">⚡</span><span class="nav-label" id="nl-load">Load</span></button>
+    <button class="nav-btn" onclick="navigate('plan')"><span class="nav-icon">📅</span><span class="nav-label" id="nl-plan">Plan</span></button>
+    <button class="nav-btn" onclick="navigate('races')"><span class="nav-icon">🏁</span><span class="nav-label" id="nl-races">Races</span></button>
+    <button class="nav-btn" onclick="navigate('setup')"><span class="nav-icon">⚙️</span><span class="nav-label" id="nl-setup">Setup</span></button>
   </nav>
-
 </div>
 <div class="toast" id="toast"></div>
 
-<script>
-// ─── CONFIG ────────────────────────────────────────────────────────────────
+<script type="module">
 const STORAGE_KEY = 'elite_endurance_api_url';
 let API_URL = localStorage.getItem(STORAGE_KEY) || '';
 let currentTab = 'overview';
 let trainingData = [];
 let lastFetch = 0;
+let lastFetchTime = null;
 let chartInstances = {};
+let fetchError = false;
 
-// ─── PLAN DATA ─────────────────────────────────────────────────────────────
 const PLAN = [
   [1,'2026-03-16','Strength Session A','4×1km @ 10k pace','Easy run 6km','Strength B + 5km easy','Rest / mobility','Long run 10km Z2','Easy cycle 60min','Base + 10k build'],
   [2,'2026-03-23','Strength Session A','5×800m @ 10k pace','Easy run 6km','Strength B + 5km easy','Rest / mobility','Long run 11km','Easy cycle 60min','Base + 10k build'],
@@ -232,492 +182,337 @@ const PLAN = [
   [25,'2026-08-31','Recovery / mobility','Optional easy jog 30min','Rest','Mobility','Rest','Optional easy walk','Rest','Post-race recovery'],
 ];
 
-const RACE_DATES = {
-  r1: new Date('2026-05-09'),
-  r2: new Date('2026-07-04'),
-  r3: new Date('2026-09-05'),
-};
+const PLANNED_KM = [10,11,12,12,13,14,12,0,6,6,6,6,6,5,0,14,15,16,17,18,18,16,12,0,0];
+const RACE_DATES = { r1:new Date('2026-05-09'), r2:new Date('2026-07-04'), r3:new Date('2026-09-05') };
 
-// ─── HELPERS ───────────────────────────────────────────────────────────────
 function daysUntil(d) {
-  const now = new Date(); now.setHours(0,0,0,0);
-  const diff = Math.ceil((d - now) / 86400000);
-  return diff > 0 ? diff : 0;
+  const now=new Date(); now.setHours(0,0,0,0);
+  const diff=Math.ceil((d-now)/86400000);
+  return diff>0?diff:0;
 }
-
 function currentWeek() {
-  const start = new Date('2026-03-16'); start.setHours(0,0,0,0);
-  const now = new Date(); now.setHours(0,0,0,0);
-  return Math.max(1, Math.min(25, Math.floor((now - start) / (7*86400000)) + 1));
+  const start=new Date('2026-03-16'); start.setHours(0,0,0,0);
+  const now=new Date(); now.setHours(0,0,0,0);
+  return Math.max(1,Math.min(25,Math.floor((now-start)/(7*86400000))+1));
 }
+function parseNum(v) {
+  if(v===null||v===undefined||v==='') return null;
+  const n=parseFloat(v); return isNaN(n)?null:n;
+}
+function isCompleted(r) { return String(r['Completed?']||'').trim().toLowerCase()==='yes'; }
 
-function parseNum(v) { const n = parseFloat(v); return isNaN(n) ? 0 : n; }
-
+// FIXED: session-level load = sum(duration × RPE) per session
 function weeklyStats(data) {
-  const weeks = {};
-  for (let w = 1; w <= 25; w++) weeks[w] = { run:0, cycle:0, duration:0, rpes:[], fatigues:[], completed:0, total:0 };
-  data.forEach(r => {
-    const w = parseInt(r['Week']);
-    if (!weeks[w]) return;
+  const weeks={};
+  for(let w=1;w<=25;w++) weeks[w]={run:0,cycle:0,duration:0,load:0,rpes:[],fatigues:[],completed:0,total:0};
+  data.forEach(r=>{
+    const w=parseInt(r['Week']); if(!weeks[w]) return;
     weeks[w].total++;
-    if (String(r['Completed?']).toLowerCase() === 'yes') {
+    if(isCompleted(r)) {
       weeks[w].completed++;
-      weeks[w].run += parseNum(r['Run Distance (km)']);
-      weeks[w].cycle += parseNum(r['Cycle Distance (km)']);
-      weeks[w].duration += parseNum(r['Duration (min)']);
-      const rpe = parseNum(r['RPE']); if (rpe > 0) weeks[w].rpes.push(rpe);
-      const fat = parseNum(r['Fatigue (1-5)']); if (fat > 0) weeks[w].fatigues.push(fat);
+      const run=parseNum(r['Run Distance (km)'])||0;
+      const cycle=parseNum(r['Cycle Distance (km)'])||0;
+      const dur=parseNum(r['Duration (min)'])||0;
+      const rpe=parseNum(r['RPE']);
+      const fat=parseNum(r['Fatigue (1-5)']);
+      weeks[w].run+=run; weeks[w].cycle+=cycle; weeks[w].duration+=dur;
+      if(dur>0&&rpe!==null&&rpe>0) weeks[w].load+=dur*rpe;
+      if(rpe!==null&&rpe>0) weeks[w].rpes.push(rpe);
+      if(fat!==null&&fat>0) weeks[w].fatigues.push(fat);
     }
   });
-  return Object.entries(weeks).map(([w, d]) => {
-    const avgRpe = d.rpes.length ? d.rpes.reduce((a,b)=>a+b,0)/d.rpes.length : null;
-    const avgFat = d.fatigues.length ? d.fatigues.reduce((a,b)=>a+b,0)/d.fatigues.length : null;
-    return {
-      week: parseInt(w),
-      run: Math.round(d.run*10)/10,
-      cycle: Math.round(d.cycle*10)/10,
-      duration: d.duration,
-      load: avgRpe ? Math.round(d.duration * avgRpe) : 0,
-      avgRpe: avgRpe ? Math.round(avgRpe*10)/10 : null,
-      avgFat: avgFat ? Math.round(avgFat*10)/10 : null,
-      completed: d.completed,
-      total: d.total,
-    };
+  return Object.entries(weeks).map(([w,d])=>{
+    const avgRpe=d.rpes.length?d.rpes.reduce((a,b)=>a+b,0)/d.rpes.length:null;
+    const avgFat=d.fatigues.length?d.fatigues.reduce((a,b)=>a+b,0)/d.fatigues.length:null;
+    return { week:parseInt(w), run:Math.round(d.run*10)/10, cycle:Math.round(d.cycle*10)/10,
+      duration:Math.round(d.duration), load:Math.round(d.load),
+      avgRpe:avgRpe?Math.round(avgRpe*10)/10:null, avgFat:avgFat?Math.round(avgFat*10)/10:null,
+      completed:d.completed, total:d.total,
+      completionPct:d.total>0?Math.round((d.completed/d.total)*100):0 };
   });
 }
 
 function badgeHtml(type) {
-  const map = {
-    run: ['#1bc4a0','rgba(27,196,160,.15)'],
-    cycle: ['#f07830','rgba(240,120,48,.15)'],
-    strength: ['#9b7dea','rgba(155,125,234,.15)'],
-    rest: ['#8891a8','rgba(136,145,168,.15)'],
-  };
-  const t = (String(type||'').toLowerCase().includes('run') ? 'run' :
-             String(type||'').toLowerCase().includes('cycle') ? 'cycle' :
-             String(type||'').toLowerCase().includes('strength') ? 'strength' : 'rest');
-  const [c,bg] = map[t]||map.rest;
+  const t=String(type||'').toLowerCase();
+  const kind=t.includes('run')||t.includes('tempo')||t.includes('interval')||t.includes('jog')?'run'
+    :t.includes('cycle')||t.includes('ride')||t.includes('spin')?'cycle'
+    :t.includes('strength')?'strength':'rest';
+  const map={run:['#1bc4a0','rgba(27,196,160,.15)'],cycle:['#f07830','rgba(240,120,48,.15)'],strength:['#9b7dea','rgba(155,125,234,.15)'],rest:['#8891a8','rgba(136,145,168,.15)']};
+  const [c,bg]=map[kind];
   return `<span class="badge" style="background:${bg};color:${c}">${type||'—'}</span>`;
 }
 
-function showToast(msg, color) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.style.background = color || 'var(--teal)';
-  el.style.color = color ? '#fff' : '#0f1117';
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2500);
+function showToast(msg,color) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.style.background=color||'var(--teal)'; el.style.color=color?'#fff':'#0f1117';
+  el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500);
+}
+
+function updateSyncBadge(state) {
+  const el=document.getElementById('sync-badge'); el.style.display='block';
+  if(state==='error') { el.className='sync-badge error'; el.textContent='⚠ Connection error'; }
+  else if(lastFetchTime) {
+    el.className='sync-badge';
+    const mins=Math.floor((Date.now()-lastFetchTime)/60000);
+    el.textContent=mins<1?'↻ Just synced':`↻ ${mins}m ago`;
+  }
 }
 
 function destroyCharts() {
-  Object.values(chartInstances).forEach(c => { try { c.destroy(); } catch(e){} });
-  chartInstances = {};
+  Object.values(chartInstances).forEach(c=>{try{c.destroy();}catch(e){}});
+  chartInstances={};
 }
 
-// ─── FETCH DATA ────────────────────────────────────────────────────────────
 async function fetchData(force) {
-  if (!API_URL) return [];
-  if (!force && trainingData.length && Date.now() - lastFetch < 120000) return trainingData;
+  if(!API_URL) return [];
+  if(!force&&trainingData.length&&Date.now()-lastFetch<120000) return trainingData;
   try {
-    const r = await fetch(API_URL + '?action=getData');
-    const json = await r.json();
-    if (json.status === 'ok') {
-      trainingData = json.data;
-      lastFetch = Date.now();
-      return trainingData;
-    }
+    const r=await fetch(API_URL+'?action=getData');
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const json=await r.json();
+    if(json.status!=='ok') throw new Error(json.error||'Bad response');
+    trainingData=json.data; lastFetch=Date.now(); lastFetchTime=Date.now();
+    fetchError=false; updateSyncBadge('ok'); return trainingData;
   } catch(e) {
-    showToast('Could not fetch data — check your API URL in Setup', '#e84545');
+    fetchError=true; updateSyncBadge('error'); return trainingData;
   }
-  return trainingData;
 }
 
-// ─── NAVIGATION ────────────────────────────────────────────────────────────
-const tabs = ['overview','history','load','plan','races','setup'];
-
+const tabs=['overview','history','load','plan','races','setup'];
 function navigate(tab) {
-  currentTab = tab;
-  tabs.forEach(t => {
-    const el = document.getElementById('nl-'+t);
-    if (el) el.style.color = t === tab ? 'var(--teal)' : 'var(--muted)';
-  });
+  currentTab=tab;
+  tabs.forEach(t=>{ const el=document.getElementById('nl-'+t); if(el) el.style.color=t===tab?'var(--teal)':'var(--muted)'; });
   render();
 }
 
 async function render() {
   destroyCharts();
-  const content = document.getElementById('content');
-  if (!API_URL && currentTab !== 'setup') {
-    content.innerHTML = setupHTML(true);
-    document.getElementById('hdr-sub').textContent = 'Setup required';
+  const content=document.getElementById('content');
+  if(!API_URL&&currentTab!=='setup') { content.innerHTML=setupHTML(true); document.getElementById('hdr-sub').textContent='Setup required'; return; }
+  content.innerHTML='<div class="loading-state"><div class="spinner"></div><span>Loading...</span></div>';
+  const data=await fetchData();
+  if(fetchError&&!data.length&&currentTab!=='setup') {
+    content.innerHTML=`<div class="error-state"><div class="error-icon">⚠️</div><div class="error-title">Could not load data</div><div class="error-sub">Check your Google Apps Script URL in Setup, or verify the sheet is published correctly.</div><button class="btn-error-action" onclick="navigate('setup')">Go to Setup</button><br><br><button class="btn-refresh" style="margin:0 auto" onclick="refreshData()">↻ Try again</button></div>`;
     return;
   }
-  content.innerHTML = '<div class="loading-state"><div class="spinner"></div><span>Loading...</span></div>';
-  const data = await fetchData();
-  const cw = currentWeek();
-  document.getElementById('hdr-sub').textContent = `Paul Carroll · W${cw} of 25`;
-
-  if (currentTab === 'overview') renderOverview(data, cw);
-  else if (currentTab === 'history') renderHistory(data);
-  else if (currentTab === 'load') renderLoad(data, cw);
-  else if (currentTab === 'plan') renderPlan(cw);
-  else if (currentTab === 'races') renderRaces();
-  else if (currentTab === 'setup') content.innerHTML = setupHTML(false);
+  const cw=currentWeek();
+  document.getElementById('hdr-sub').textContent=`Paul Carroll · W${cw} of 25`;
+  if(currentTab==='overview') renderOverview(data,cw);
+  else if(currentTab==='history') renderHistory(data);
+  else if(currentTab==='load') renderLoad(data,cw);
+  else if(currentTab==='plan') renderPlan(cw);
+  else if(currentTab==='races') renderRaces();
+  else if(currentTab==='setup') content.innerHTML=setupHTML(false);
 }
 
-// ─── OVERVIEW ──────────────────────────────────────────────────────────────
-function renderOverview(data, cw) {
-  const ws = weeklyStats(data);
-  const totRun = data.filter(r=>String(r['Completed?']).toLowerCase()==='yes').reduce((a,r)=>a+parseNum(r['Run Distance (km)']),0);
-  const totCycle = data.filter(r=>String(r['Completed?']).toLowerCase()==='yes').reduce((a,r)=>a+parseNum(r['Cycle Distance (km)']),0);
-  const totMin = data.filter(r=>String(r['Completed?']).toLowerCase()==='yes').reduce((a,r)=>a+parseNum(r['Duration (min)']),0);
-  const totSessions = data.filter(r=>String(r['Completed?']).toLowerCase()==='yes').length;
-  const phase = PLAN[cw-1]?.[9] || 'Complete';
-  const pct = Math.round((cw/25)*100);
+function generateInsights(ws,cw) {
+  const insights=[];
+  const cwd=ws[cw-1]; const pwd=ws[cw-2];
+  if(cwd&&pwd&&cwd.load>0&&pwd.load>0) {
+    const spike=((cwd.load-pwd.load)/pwd.load)*100;
+    if(spike>15) insights.push({type:'red',icon:'🔴',title:`Load spike this week (+${Math.round(spike)}%)`,text:'Training load jumped more than 15% from last week. Consider an extra rest day or reduce intensity tomorrow.'});
+  }
+  if(cwd&&cwd.avgFat!==null&&cwd.avgFat>=4) insights.push({type:'red',icon:'🔴',title:`High fatigue this week (avg ${cwd.avgFat}/5)`,text:'Average fatigue is above 3.5 — your body is asking for recovery. Prioritise sleep and keep tomorrow easy.'});
+  else if(cwd&&cwd.avgFat!==null&&cwd.avgFat>=3) insights.push({type:'amber',icon:'🟠',title:`Moderate fatigue building (avg ${cwd.avgFat}/5)`,text:'Fatigue is creeping up. Monitor closely and protect your sleep and easy days this week.'});
+  const recent=ws.slice(Math.max(0,cw-4),cw).filter(w=>w.total>0);
+  const avgComp=recent.length?Math.round(recent.reduce((a,w)=>a+w.completionPct,0)/recent.length):0;
+  if(avgComp>=85) insights.push({type:'green',icon:'🟢',title:`Strong consistency (${avgComp}% over last ${recent.length} weeks)`,text:'Excellent adherence to the plan. Consistent training is your biggest asset heading into race prep.'});
+  else if(avgComp<60&&recent.length>=2) insights.push({type:'amber',icon:'🟡',title:`Consistency needs attention (${avgComp}% recently)`,text:'Completion rate has dipped. Focus on completing the key sessions — intervals and long run — even if you miss others.'});
+  if(cw>=23&&cw<=25) insights.push({type:'blue',icon:'🔵',title:'Taper phase — trust the process',text:'Volume drops now are intentional. Resist the urge to add extra sessions. Your fitness is banked, the goal is freshness.'});
+  const r1d=daysUntil(RACE_DATES.r1),r2d=daysUntil(RACE_DATES.r2),r3d=daysUntil(RACE_DATES.r3);
+  if(r1d>0&&r1d<=14) insights.push({type:'blue',icon:'🏁',title:`Killarney 10k in ${r1d} days`,text:'Race week protocol: keep volume low, one short sharpener midweek, full rest the day before.'});
+  if(r2d>0&&r2d<=14) insights.push({type:'blue',icon:'🚴',title:`Ring of Kerry in ${r2d} days`,text:'Legs should feel springy. Short easy spin midweek, no hard efforts. Prep your bike and nutrition plan.'});
+  if(r3d>0&&r3d<=14) insights.push({type:'blue',icon:'🏅',title:`Dingle Half Marathon in ${r3d} days`,text:'Trust your training. Short sharpener Tuesday, easy shakeout Friday, race Saturday.'});
+  if(!insights.length) insights.push({type:'green',icon:'✅',title:'All systems good',text:'No alerts this week. Stay consistent, keep the easy days easy, and trust the plan.'});
+  return insights;
+}
 
-  const races = [
-    {label:'Killarney 10k',date:'9 May',key:'r1',dist:'10km',color:'var(--teal)'},
-    {label:'Ring of Kerry',date:'4 Jul',key:'r2',dist:'170km',color:'var(--orange)'},
-    {label:'Dingle HM',date:'5 Sep',key:'r3',dist:'21.1km',color:'var(--purple)'},
-  ];
+function insightHtml(ins) {
+  return `<div class="insight insight-${ins.type}"><div class="insight-icon">${ins.icon}</div><div class="insight-text"><div class="insight-title">${ins.title}</div>${ins.text}</div></div>`;
+}
 
-  document.getElementById('content').innerHTML = `
+function buildHeatmap(data) {
+  const byDate={};
+  data.forEach(r=>{ const d=String(r['Date']).split('T')[0].split(' ')[0]; byDate[d]={completed:isCompleted(r),type:String(r['Session Type']||'').toLowerCase(),planned:r['Planned Session']}; });
+  const startDate=new Date('2026-03-16'); const endDate=new Date('2026-09-06');
+  const today=new Date(); today.setHours(0,0,0,0);
+  const days=[]; let d=new Date(startDate);
+  while(d<=endDate){days.push(new Date(d));d.setDate(d.getDate()+1);}
+  const firstDay=days[0].getDay(); const padDays=firstDay===0?6:firstDay-1;
+  function cellColor(date,info) {
+    if(date>today) return 'rgba(255,255,255,0.05)';
+    if(!info) return 'rgba(255,255,255,0.05)';
+    if(!info.completed) return 'rgba(232,69,69,0.35)';
+    const t=info.type;
+    if(t.includes('run')||t.includes('tempo')||t.includes('interval')) return '#1bc4a0';
+    if(t.includes('cycle')||t.includes('ride')||t.includes('spin')) return '#f07830';
+    if(t.includes('strength')) return '#9b7dea';
+    return '#4a90d9';
+  }
+  const totalCols=Math.ceil((padDays+days.length)/7);
+  const cells=[];
+  for(let i=0;i<padDays;i++) cells.push(`<div class="hm-cell" style="background:transparent"></div>`);
+  days.forEach(date=>{
+    const key=date.toISOString().split('T')[0];
+    const info=byDate[key]; const color=cellColor(date,info);
+    const label=date.toLocaleDateString('en-IE',{day:'numeric',month:'short'})+(info?` · ${info.planned||''}${info.completed?' ✓':' ✗'}':'');
+    cells.push(`<div class="hm-cell" style="background:${color}"><span class="hm-tip">${label}</span></div>`);
+  });
+  const months=[]; let lastMonth=-1; let col=padDays;
+  days.forEach(date=>{ const m=date.getMonth(); if(m!==lastMonth){months.push({label:date.toLocaleDateString('en-IE',{month:'short'}),col:Math.floor(col/7)});lastMonth=m;} col++; });
+  const monthLabels=Array(totalCols).fill('');
+  months.forEach(m=>{if(m.col<totalCols)monthLabels[m.col]=m.label;});
+  return `<div class="heatmap-wrap">
+    <div class="heatmap-month-labels" style="grid-template-columns:repeat(${totalCols},13px)">${monthLabels.map(l=>`<div style="font-size:9px;color:var(--muted)">${l}</div>`).join('')}</div>
+    <div class="heatmap-grid" style="grid-template-columns:repeat(${totalCols},13px);grid-template-rows:repeat(7,13px)">${cells.join('')}</div>
+    <div class="heatmap-legend">
+      <div class="hm-cell" style="background:#1bc4a0;border-radius:2px"></div>Run
+      <div class="hm-cell" style="background:#f07830;border-radius:2px;margin-left:6px"></div>Cycle
+      <div class="hm-cell" style="background:#9b7dea;border-radius:2px;margin-left:6px"></div>Strength
+      <div class="hm-cell" style="background:rgba(232,69,69,.35);border-radius:2px;margin-left:6px"></div>Missed
+      <div class="hm-cell" style="background:rgba(255,255,255,.05);border-radius:2px;margin-left:6px"></div>Upcoming
+    </div>
+  </div>`;
+}
+
+function renderOverview(data,cw) {
+  const ws=weeklyStats(data);
+  const done=data.filter(isCompleted);
+  const totRun=done.reduce((a,r)=>a+(parseNum(r['Run Distance (km)'])||0),0);
+  const totCycle=done.reduce((a,r)=>a+(parseNum(r['Cycle Distance (km)'])||0),0);
+  const totMin=done.reduce((a,r)=>a+(parseNum(r['Duration (min)'])||0),0);
+  const phase=PLAN[cw-1]?.[9]||'Complete';
+  const pct=Math.round((cw/25)*100);
+  const insights=generateInsights(ws,cw);
+  const races=[{label:'Killarney 10k',date:'9 May',key:'r1',dist:'10km',color:'var(--teal)'},{label:'Ring of Kerry',date:'4 Jul',key:'r2',dist:'170km',color:'var(--orange)'},{label:'Dingle HM',date:'5 Sep',key:'r3',dist:'21.1km',color:'var(--purple)'}];
+  document.getElementById('content').innerHTML=`
     <div class="section-title">Overview</div>
     <div class="section-sub">${new Date().toLocaleDateString('en-IE',{weekday:'long',day:'numeric',month:'short',year:'numeric'})}</div>
-
-    <div class="grid-3 mb16">
-      ${races.map(r=>`
-        <div class="race-card" style="border-top:3px solid ${r.color}">
-          <div class="race-card-name">${r.label}</div>
-          <div class="race-card-date">${r.date}</div>
-          <div class="race-card-days" style="color:${r.color}">${daysUntil(RACE_DATES[r.key])}</div>
-          <div class="race-card-daystxt">days</div>
-          <div class="race-card-dist" style="color:${r.color}">${r.dist}</div>
-        </div>`).join('')}
-    </div>
-
-    <div class="card mb16">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span class="card-title" style="margin:0">Phase</span>
-        <span style="font-size:12px;font-weight:600;color:var(--teal)">W${cw} — ${phase}</span>
-      </div>
-      <div class="phase-bar-track"><div class="phase-bar-fill" style="width:${pct}%"></div></div>
-      <div class="phase-bar-labels">
-        <span>W1</span><span>10k W8</span><span>RoK W15</span><span>HM W24</span>
-      </div>
-    </div>
-
+    <div class="grid-3 mb16">${races.map(r=>`<div class="race-card" style="border-top:3px solid ${r.color}"><div class="race-card-name">${r.label}</div><div class="race-card-date">${r.date}</div><div class="race-card-days" style="color:${r.color}">${daysUntil(RACE_DATES[r.key])}</div><div class="race-card-daystxt">days</div><div class="race-card-dist" style="color:${r.color}">${r.dist}</div></div>`).join('')}</div>
+    <div class="card mb16"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="card-title" style="margin:0">Phase</span><span style="font-size:12px;font-weight:600;color:var(--teal)">W${cw} — ${phase}</span></div><div class="phase-bar-track"><div class="phase-bar-fill" style="width:${pct}%"></div></div><div class="phase-bar-labels"><span>W1</span><span>10k W8</span><span>RoK W15</span><span>HM W24</span></div></div>
+    <div class="card mb16"><div class="card-title">Coaching insights</div>${insights.map(insightHtml).join('')}</div>
     <div class="grid-2 mb16">
       <div class="stat-card"><div class="stat-label">Run km</div><div class="stat-value" style="color:var(--teal)">${totRun.toFixed(1)}</div><div class="stat-sub">total logged</div></div>
       <div class="stat-card"><div class="stat-label">Cycle km</div><div class="stat-value" style="color:var(--orange)">${totCycle.toFixed(1)}</div><div class="stat-sub">total logged</div></div>
       <div class="stat-card"><div class="stat-label">Hours</div><div class="stat-value" style="color:var(--blue)">${(totMin/60).toFixed(1)}</div><div class="stat-sub">training time</div></div>
-      <div class="stat-card"><div class="stat-label">Sessions</div><div class="stat-value" style="color:var(--green)">${totSessions}</div><div class="stat-sub">completed</div></div>
+      <div class="stat-card"><div class="stat-label">Sessions</div><div class="stat-value" style="color:var(--green)">${done.length}</div><div class="stat-sub">completed</div></div>
     </div>
-
-    <div class="card mb16">
-      <div class="card-title">Weekly run km — actual vs planned</div>
-      <div class="chart-wrap" style="height:180px"><canvas id="chart-run"></canvas></div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Actual</div>
-        <div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,.2)"></div>Planned</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">RPE & fatigue trend (RPE /10, fatigue /5)</div>
-      <div class="chart-wrap" style="height:180px"><canvas id="chart-rpe"></canvas></div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Avg RPE</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Avg fatigue</div>
-      </div>
-    </div>
-  `;
-
-  const PLANNED_KM = [10,11,12,12,13,14,12,0,6,6,6,6,6,5,0,14,15,16,17,18,18,16,12,0,0];
-  const labels = ws.map(w=>`W${w.week}`);
-  const ticks = { color:'#8891a8', font:{size:9} };
-  const grid = { color:'rgba(255,255,255,.04)' };
-
-  chartInstances['run'] = new Chart(document.getElementById('chart-run'), {
-    type:'bar',
-    data: {
-      labels,
-      datasets: [
-        { label:'Planned', data: PLANNED_KM, backgroundColor:'rgba(255,255,255,.07)', borderRadius:2, order:2 },
-        { label:'Actual', data: ws.map(w=>w.run||null), backgroundColor:'#1bc4a0', borderRadius:2, order:1 },
-      ]
-    },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-      scales:{ x:{grid,ticks:{...ticks,maxRotation:0,autoSkip:true,maxTicksLimit:13}}, y:{grid,ticks,beginAtZero:true} } }
-  });
-
-  chartInstances['rpe'] = new Chart(document.getElementById('chart-rpe'), {
-    type:'line',
-    data: {
-      labels,
-      datasets: [
-        { label:'Avg RPE', data:ws.map(w=>w.avgRpe), borderColor:'#4a90d9', backgroundColor:'rgba(74,144,217,.1)', tension:.3, pointRadius:3, pointBackgroundColor:'#4a90d9', fill:false },
-        { label:'Avg fatigue', data:ws.map(w=>w.avgFat), borderColor:'#e84545', backgroundColor:'rgba(232,69,69,.1)', tension:.3, pointRadius:3, pointBackgroundColor:'#e84545', fill:false },
-      ]
-    },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-      scales:{ x:{grid,ticks:{...ticks,maxRotation:0,autoSkip:true,maxTicksLimit:13}}, y:{grid,ticks,beginAtZero:true,max:10,
-        annotations:{fatigue:{type:'line',yMin:4,yMax:4,borderColor:'rgba(232,69,69,.3)',borderDash:[4,4]}}} } }
-  });
+    <div class="card mb16"><div class="card-title">Session completion heatmap</div>${buildHeatmap(data)}</div>
+    <div class="card mb16"><div class="card-title">Cumulative run km</div><div class="chart-wrap" style="height:170px"><canvas id="chart-cumrun"></canvas></div></div>
+    <div class="card mb16"><div class="card-title">Weekly run km — actual vs planned</div><div class="chart-wrap" style="height:170px"><canvas id="chart-run"></canvas></div><div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Actual</div><div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,.2)"></div>Planned</div></div></div>
+    <div class="card"><div class="card-title">RPE & fatigue trend</div><div class="chart-wrap" style="height:170px"><canvas id="chart-rpe"></canvas></div><div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Avg RPE /10</div><div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Avg fatigue /5</div></div></div>`;
+  const labels=ws.map(w=>`W${w.week}`);
+  const ticks={color:'#8891a8',font:{size:9}};
+  const grid={color:'rgba(255,255,255,.04)'};
+  let cum=0;
+  const cumData=ws.map(w=>{cum+=w.run;return cum>0?Math.round(cum*10)/10:null;});
+  chartInstances['cumrun']=new Chart(document.getElementById('chart-cumrun'),{type:'line',data:{labels,datasets:[{label:'Cumulative run km',data:cumData,borderColor:'#1bc4a0',backgroundColor:'rgba(27,196,160,.1)',tension:.3,pointRadius:2,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid,ticks:{...ticks,maxRotation:0,autoSkip:true,maxTicksLimit:13}},y:{grid,ticks,beginAtZero:true}}}});
+  chartInstances['run']=new Chart(document.getElementById('chart-run'),{type:'bar',data:{labels,datasets:[{label:'Planned',data:PLANNED_KM,backgroundColor:'rgba(255,255,255,.07)',borderRadius:2,order:2},{label:'Actual',data:ws.map(w=>w.run||null),backgroundColor:'#1bc4a0',borderRadius:2,order:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid,ticks:{...ticks,maxRotation:0,autoSkip:true,maxTicksLimit:13}},y:{grid,ticks,beginAtZero:true}}}});
+  chartInstances['rpe']=new Chart(document.getElementById('chart-rpe'),{type:'line',data:{labels,datasets:[{label:'Avg RPE',data:ws.map(w=>w.avgRpe),borderColor:'#4a90d9',tension:.3,pointRadius:3,pointBackgroundColor:'#4a90d9',fill:false},{label:'Avg fatigue',data:ws.map(w=>w.avgFat),borderColor:'#e84545',tension:.3,pointRadius:3,pointBackgroundColor:'#e84545',fill:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid,ticks:{...ticks,maxRotation:0,autoSkip:true,maxTicksLimit:13}},y:{grid,ticks,beginAtZero:true,max:10}}}});
 }
 
-// ─── HISTORY ───────────────────────────────────────────────────────────────
 function renderHistory(data) {
-  const completed = data.filter(r=>String(r['Completed?']).toLowerCase()==='yes').reverse();
-  if (!completed.length) {
-    document.getElementById('content').innerHTML = `
-      <div class="section-title">Session History</div>
-      <div class="section-sub">Completed sessions from Google Sheets</div>
-      <div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">No completed sessions yet</div><p>Mark sessions as "Yes" in the Completed? column of your Google Sheet</p></div>`;
-    return;
-  }
-
-  const cards = completed.map(r => `
-    <div class="session-card">
-      <div class="session-card-header">
-        <div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-            ${badgeHtml(r['Session Type'])}
-            <span style="font-size:12px;color:var(--muted)">W${r['Week']}</span>
-          </div>
-          <div style="font-size:13px;font-weight:600">${r['Date']} · ${r['Day']||''}</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px">${r['Actual Description']||r['Planned Session']||''}</div>
-        </div>
-      </div>
-      <div class="session-mini-grid">
-        <div class="session-mini-cell"><div class="session-mini-label">Run</div><div class="session-mini-value" style="color:var(--teal)">${parseNum(r['Run Distance (km)'])>0?parseNum(r['Run Distance (km)'])+'km':'—'}</div></div>
-        <div class="session-mini-cell"><div class="session-mini-label">Cycle</div><div class="session-mini-value" style="color:var(--orange)">${parseNum(r['Cycle Distance (km)'])>0?parseNum(r['Cycle Distance (km)'])+'km':'—'}</div></div>
-        <div class="session-mini-cell"><div class="session-mini-label">RPE</div><div class="session-mini-value" style="color:var(--blue)">${r['RPE']||'—'}</div></div>
-        <div class="session-mini-cell"><div class="session-mini-label">Fatigue</div><div class="session-mini-value" style="color:var(--red)">${r['Fatigue (1-5)']||'—'}</div></div>
-      </div>
-      ${r['Notes']?`<div class="session-notes">${r['Notes']}</div>`:''}
-    </div>`).join('');
-
-  document.getElementById('content').innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-      <div class="section-title">Session History</div>
-      <button class="btn-refresh" onclick="refreshData()">↻ Refresh</button>
-    </div>
-    <div class="section-sub">${completed.length} completed sessions</div>
-    ${cards}`;
+  const done=data.filter(isCompleted).reverse();
+  document.getElementById('content').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><div class="section-title">Session History</div><button class="btn-refresh" onclick="refreshData()">↻ Refresh</button></div>
+    <div class="section-sub">${done.length} completed sessions</div>
+    ${!done.length?`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">No completed sessions yet</div><p>Mark sessions as "Yes" in the Completed? column of your Google Sheet</p></div>`:
+    done.map(r=>`<div class="session-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">${badgeHtml(r['Session Type'])}<span style="font-size:12px;color:var(--muted)">W${r['Week']}</span></div><div style="font-size:13px;font-weight:600;margin-bottom:8px">${r['Date']} · ${r['Day']||''} — ${r['Actual Description']||r['Planned Session']||''}</div><div class="session-mini-grid"><div class="session-mini-cell"><div class="session-mini-label">Run</div><div class="session-mini-value" style="color:var(--teal)">${(parseNum(r['Run Distance (km)'])||0)>0?parseNum(r['Run Distance (km)'])+'km':'—'}</div></div><div class="session-mini-cell"><div class="session-mini-label">Cycle</div><div class="session-mini-value" style="color:var(--orange)">${(parseNum(r['Cycle Distance (km)'])||0)>0?parseNum(r['Cycle Distance (km)'])+'km':'—'}</div></div><div class="session-mini-cell"><div class="session-mini-label">RPE</div><div class="session-mini-value" style="color:var(--blue)">${r['RPE']||'—'}</div></div><div class="session-mini-cell"><div class="session-mini-label">Fatigue</div><div class="session-mini-value" style="color:var(--red)">${r['Fatigue (1-5)']||'—'}</div></div></div>${r['Notes']?`<div class="session-notes">${r['Notes']}</div>`:''}</div>`).join('')}`;
 }
 
-// ─── TRAINING LOAD ─────────────────────────────────────────────────────────
-function renderLoad(data, cw) {
-  const ws = weeklyStats(data);
-  const currLoad = ws[cw-1]?.load || 0;
-  const allLoads = ws.filter(w=>w.load>0).map(w=>w.load);
-  const avgLoad = allLoads.length ? Math.round(allLoads.reduce((a,b)=>a+b,0)/allLoads.length) : 0;
-  const allFats = data.filter(r=>String(r['Completed?']).toLowerCase()==='yes'&&parseNum(r['Fatigue (1-5)'])>0).map(r=>parseNum(r['Fatigue (1-5)']));
-  const avgFat = allFats.length ? (allFats.reduce((a,b)=>a+b,0)/allFats.length).toFixed(1) : '—';
-
-  const loadColors = ws.map((w,i)=>{
-    if (!w.load) return 'rgba(255,255,255,.04)';
-    const prev = ws[i-1]?.load;
-    return prev>0 && w.load>prev*1.15 ? '#e84545' : '#4a90d9';
-  });
-
-  document.getElementById('content').innerHTML = `
+function renderLoad(data,cw) {
+  const ws=weeklyStats(data);
+  const currLoad=ws[cw-1]?.load||0;
+  const allLoads=ws.filter(w=>w.load>0).map(w=>w.load);
+  const avgLoad=allLoads.length?Math.round(allLoads.reduce((a,b)=>a+b,0)/allLoads.length):0;
+  const allFats=data.filter(isCompleted).map(r=>parseNum(r['Fatigue (1-5)'])).filter(v=>v!==null&&v>0);
+  const avgFat=allFats.length?(allFats.reduce((a,b)=>a+b,0)/allFats.length).toFixed(1):'—';
+  const loadColors=ws.map((w,i)=>{ if(!w.load) return 'rgba(255,255,255,.04)'; const prev=ws[i-1]?.load; return prev>0&&w.load>prev*1.15?'#e84545':'#4a90d9'; });
+  document.getElementById('content').innerHTML=`
     <div class="section-title">Training Load</div>
-    <div class="section-sub">Session load = Duration × RPE. Red = >15% jump week-on-week.</div>
+    <div class="section-sub">Load = Σ(session duration × RPE). Red bars = >15% jump from prior week.</div>
     <div class="grid-3 mb16">
       <div class="stat-card"><div class="stat-label">This week</div><div class="stat-value" style="color:var(--amber)">${currLoad||'—'}</div><div class="stat-sub">load score</div></div>
       <div class="stat-card"><div class="stat-label">Avg load</div><div class="stat-value" style="color:var(--blue)">${avgLoad||'—'}</div><div class="stat-sub">per week</div></div>
       <div class="stat-card"><div class="stat-label">Avg fatigue</div><div class="stat-value" style="color:var(--red)">${avgFat}</div><div class="stat-sub">target < 3.5</div></div>
     </div>
-    <div class="card mb16">
-      <div class="card-title">Session load by week</div>
-      <div class="chart-wrap" style="height:200px"><canvas id="chart-load"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Run & cycle km by week</div>
-      <div class="chart-wrap" style="height:200px"><canvas id="chart-mil"></canvas></div>
-      <div class="legend">
-        <div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Run</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>Cycle</div>
-      </div>
-    </div>`;
-
-  const labels = ws.map(w=>`W${w.week}`);
-  const ticks = { color:'#8891a8', font:{size:9} };
-  const grid = { color:'rgba(255,255,255,.04)' };
-
-  chartInstances['load'] = new Chart(document.getElementById('chart-load'), {
-    type:'bar',
-    data: { labels, datasets:[{ label:'Load', data:ws.map(w=>w.load||null), backgroundColor:loadColors, borderRadius:3 }] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-      scales:{ x:{grid,ticks:{...ticks,maxRotation:0,autoSkip:true,maxTicksLimit:13}}, y:{grid,ticks,beginAtZero:true} } }
-  });
-
-  chartInstances['mil'] = new Chart(document.getElementById('chart-mil'), {
-    type:'bar',
-    data: { labels, datasets:[
-      { label:'Run', data:ws.map(w=>w.run||null), backgroundColor:'#1bc4a0', borderRadius:3 },
-      { label:'Cycle', data:ws.map(w=>w.cycle||null), backgroundColor:'#f07830', borderRadius:3 },
-    ]},
-    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-      scales:{ x:{grid,ticks:{...ticks,maxRotation:0,autoSkip:true,maxTicksLimit:13}}, y:{grid,ticks,beginAtZero:true} } }
-  });
+    <div class="card mb16"><div class="card-title">Session load by week (Σ duration × RPE)</div><div class="chart-wrap" style="height:200px"><canvas id="chart-load"></canvas></div></div>
+    <div class="card mb16"><div class="card-title">Cumulative run km</div><div class="chart-wrap" style="height:180px"><canvas id="chart-cum2"></canvas></div></div>
+    <div class="card"><div class="card-title">Run & cycle km by week</div><div class="chart-wrap" style="height:180px"><canvas id="chart-mil"></canvas></div><div class="legend"><div class="legend-item"><div class="legend-dot" style="background:var(--teal)"></div>Run</div><div class="legend-item"><div class="legend-dot" style="background:var(--orange)"></div>Cycle</div></div></div>`;
+  const labels=ws.map(w=>`W${w.week}`);
+  const ticks={color:'#8891a8',font:{size:9}};
+  const grid={color:'rgba(255,255,255,.04)'};
+  chartInstances['load']=new Chart(document.getElementById('chart-load'),{type:'bar',data:{labels,datasets:[{label:'Load',data:ws.map(w=>w.load||null),backgroundColor:loadColors,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid,ticks:{...ticks,maxRotation:0,autoSkip:true,maxTicksLimit:13}},y:{grid,ticks,beginAtZero:true}}}});
+  let cum2=0;
+  const cd2=ws.map(w=>{cum2+=w.run;return cum2>0?Math.round(cum2*10)/10:null;});
+  chartInstances['cum2']=new Chart(document.getElementById('chart-cum2'),{type:'line',data:{labels,datasets:[{label:'Cumulative run km',data:cd2,borderColor:'#1bc4a0',backgroundColor:'rgba(27,196,160,.1)',tension:.3,pointRadius:2,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid,ticks:{...ticks,maxRotation:0,autoSkip:true,maxTicksLimit:13}},y:{grid,ticks,beginAtZero:true}}}});
+  chartInstances['mil']=new Chart(document.getElementById('chart-mil'),{type:'bar',data:{labels,datasets:[{label:'Run',data:ws.map(w=>w.run||null),backgroundColor:'#1bc4a0',borderRadius:3},{label:'Cycle',data:ws.map(w=>w.cycle||null),backgroundColor:'#f07830',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid,ticks:{...ticks,maxRotation:0,autoSkip:true,maxTicksLimit:13}},y:{grid,ticks,beginAtZero:true}}}});
 }
 
-// ─── PLAN ──────────────────────────────────────────────────────────────────
 function renderPlan(cw) {
-  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const weeks = PLAN.map(row => {
-    const isCurrent = row[0] === cw;
-    const startDate = new Date(row[1]).toLocaleDateString('en-IE',{day:'numeric',month:'short'});
-    const sessionRows = days.map((d,i)=>`
-      <div class="week-row">
-        <span class="week-row-day">${d}</span>
-        <span class="week-row-session">${row[i+2]}</span>
-      </div>`).join('');
-    return `
-      <div class="week-card${isCurrent?' current':''}" id="wk-${row[0]}">
-        <div class="week-header" onclick="toggleWeek(${row[0]})">
-          <div class="week-header-left">
-            <span class="week-num" style="color:${isCurrent?'var(--teal)':'var(--text)'}">${row[0]}${isCurrent?' ← now':''}</span>
-            <span class="week-date">${startDate}</span>
-            <span class="phase-tag">${row[9]}</span>
-          </div>
-          <span class="week-chevron" id="chev-${row[0]}">${isCurrent?'▴':'▾'}</span>
-        </div>
-        <div class="week-body" id="wkb-${row[0]}" style="display:${isCurrent?'block':'none'}">${sessionRows}</div>
-      </div>`;
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const weeks=PLAN.map(row=>{
+    const isCurrent=row[0]===cw;
+    const sd=new Date(row[1]).toLocaleDateString('en-IE',{day:'numeric',month:'short'});
+    const sessionRows=days.map((d,i)=>`<div class="week-row"><span class="week-row-day">${d}</span><span class="week-row-session">${row[i+2]}</span></div>`).join('');
+    return `<div class="week-card${isCurrent?' current':''}" id="wk-${row[0]}"><div class="week-header" onclick="toggleWeek(${row[0]})"><div class="week-header-left"><span class="week-num" style="color:${isCurrent?'var(--teal)':'var(--text)'}">${row[0]}${isCurrent?' ← now':''}</span><span class="week-date">${sd}</span><span class="phase-tag">${row[9]}</span></div><span class="week-chevron" id="chev-${row[0]}">${isCurrent?'▴':'▾'}</span></div><div class="week-body" id="wkb-${row[0]}" style="display:${isCurrent?'block':'none'}">${sessionRows}</div></div>`;
   }).join('');
-
-  document.getElementById('content').innerHTML = `
-    <div class="section-title">Training Plan</div>
-    <div class="section-sub">25 weeks · currently Week ${cw}</div>
-    ${weeks}`;
-
-  // Scroll current week into view
-  setTimeout(()=>{
-    const el = document.getElementById(`wk-${cw}`);
-    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
-  }, 100);
+  document.getElementById('content').innerHTML=`<div class="section-title">Training Plan</div><div class="section-sub">25 weeks · currently Week ${cw}</div>${weeks}`;
+  setTimeout(()=>{const el=document.getElementById(`wk-${cw}`);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},100);
 }
 
 function toggleWeek(w) {
-  const body = document.getElementById(`wkb-${w}`);
-  const chev = document.getElementById(`chev-${w}`);
-  if (!body) return;
-  const open = body.style.display !== 'none';
-  body.style.display = open ? 'none' : 'block';
-  chev.textContent = open ? '▾' : '▴';
+  const body=document.getElementById(`wkb-${w}`);const chev=document.getElementById(`chev-${w}`);
+  if(!body) return;
+  const open=body.style.display!=='none';
+  body.style.display=open?'none':'block';
+  chev.textContent=open?'▾':'▴';
 }
 
-// ─── RACES ─────────────────────────────────────────────────────────────────
 function renderRaces() {
-  const races = [
-    { color:'var(--teal)', name:'Killarney 10k', date:'Saturday 9 May 2026', week:8,
-      pacing:[['0–3km','Controlled start, build into pace'],['Middle km','Settle and hold effort'],['Final km','Push hard if feeling strong']],
-      strategy:['Warm-up: 10–15 min jog + drills + 3–4 strides','Race week: light strength Mon, 4×800m Wed at race pace','Day before: 20–30 min easy run or full rest','Avoid: hard gym sessions, extra mileage, testing fitness'] },
-    { color:'var(--orange)', name:'Ring of Kerry Cycle', date:'Saturday 4 July 2026', week:15,
-      pacing:[['Start','Conservative — ride well below ego'],['Fuel','60–90g carbs/hr from first 30 min'],['Fluid','500–750ml/hr, 500–700mg sodium/hr'],['Rule','Never chase groups above your plan']],
-      strategy:['Race week: short easy sessions only — legs must feel fresh','Wed: easy 45min spin + 2–3 cadence lifts only','Day before: easy check spin 20min or full rest','Warm-up: the first 20 min of the ride IS your warm-up'] },
-    { color:'var(--purple)', name:'Dingle Half Marathon', date:'Saturday 5 September 2026', week:24,
-      pacing:[['0–5km','Conservative 5:05–5:10/km'],['5–15km','Settle at race rhythm'],['15–21km','Build if strong — target ~5:00/km avg'],['Goal','~1:45 finish']],
-      strategy:['Warm-up: 12–15 min jog + mobility + 3 strides','Race week: 4×800m Wed at threshold/race rhythm','Day before: 15–20 min easy shakeout + 3 strides, or rest','Higher carbs day before · small gel only if practiced in training','Avoid: poor sleep, long standing, starting too fast'] },
+  const races=[
+    {color:'var(--teal)',name:'Killarney 10k',date:'Saturday 9 May 2026',week:8,pacing:[['0–3km','Controlled start, build into pace'],['Middle km','Settle and hold effort'],['Final km','Push hard if feeling strong']],strategy:['Warm-up: 10–15 min jog + drills + 3–4 strides','Race week: light strength Mon, 4×800m Wed at race pace','Day before: 20–30 min easy or full rest','Avoid: hard gym, extra mileage, testing fitness']},
+    {color:'var(--orange)',name:'Ring of Kerry Cycle',date:'Saturday 4 July 2026',week:15,pacing:[['Start','Conservative — ride well below ego'],['Fuel','60–90g carbs/hr from first 30 min'],['Fluid','500–750ml/hr, 500–700mg sodium/hr'],['Rule','Never chase groups above your plan']],strategy:['Race week: short easy sessions only — legs must feel fresh','Wed: easy 45min spin + 2–3 cadence lifts only','Day before: easy check spin 20min or full rest','Warm-up: first 20 min of the ride IS your warm-up']},
+    {color:'var(--purple)',name:'Dingle Half Marathon',date:'Saturday 5 September 2026',week:24,pacing:[['0–5km','Conservative 5:05–5:10/km'],['5–15km','Settle at race rhythm'],['15–21km','Build if strong — target ~5:00/km avg'],['Goal','~1:45 finish']],strategy:['Warm-up: 12–15 min jog + mobility + 3 strides','Race week: 4×800m Wed at threshold/race rhythm','Day before: easy shakeout + 3 strides, or rest','Higher carbs day before · small gel only if practiced','Avoid: poor sleep, long standing, starting too fast']},
   ];
-
-  const html = races.map(r=>`
-    <div class="card race-guide-card">
-      <div class="race-guide-header">
-        <div class="race-guide-dot" style="background:${r.color}"></div>
-        <div>
-          <div class="race-guide-name">${r.name}</div>
-          <div class="race-guide-date">${r.date} · Week ${r.week}</div>
-        </div>
-      </div>
-      <div class="card-title">Pacing</div>
-      ${r.pacing.map(([k,v])=>`<div class="race-guide-row"><strong>${k}</strong> — ${v}</div>`).join('')}
-      <div class="card-title" style="margin-top:14px">Race week</div>
-      ${r.strategy.map(l=>`<div class="race-week-row">${l}</div>`).join('')}
-    </div>`).join('');
-
-  document.getElementById('content').innerHTML = `
-    <div class="section-title">Race Guides</div>
-    <div class="section-sub">Pacing, fuelling & race week strategy</div>
-    ${html}`;
+  document.getElementById('content').innerHTML=`<div class="section-title">Race Guides</div><div class="section-sub">Pacing, fuelling & race week strategy</div>`+races.map(r=>`<div class="card mb16"><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><div style="width:10px;height:10px;border-radius:50%;background:${r.color};flex-shrink:0"></div><div><div style="font-size:15px;font-weight:600">${r.name}</div><div style="font-size:11px;color:var(--muted)">${r.date} · Week ${r.week}</div></div></div><div class="card-title">Pacing</div>${r.pacing.map(([k,v])=>`<div class="race-guide-row"><strong>${k}</strong> — ${v}</div>`).join('')}<div class="card-title" style="margin-top:14px">Race week</div>${r.strategy.map(l=>`<div class="race-week-row">${l}</div>`).join('')}</div>`).join('');
 }
 
-// ─── SETUP ─────────────────────────────────────────────────────────────────
 function setupHTML(isFirstTime) {
-  return `
-    <div class="config-wrap">
-      <div class="section-title">${isFirstTime?'Welcome — Setup Required':'Setup'}</div>
-      <div class="section-sub">${isFirstTime?'Connect your Google Sheet to activate the dashboard':'Update your Google Apps Script URL'}</div>
-
-      <div class="config-step">
-        <div class="config-step-num">1</div>
-        <div class="config-step-body">
-          <strong>Open your Google Sheet</strong> → click <strong>Extensions</strong> → <strong>Apps Script</strong>
-        </div>
-      </div>
-      <div class="config-step">
-        <div class="config-step-num">2</div>
-        <div class="config-step-body">
-          Delete any existing code, paste in the contents of <code>google_apps_script.gs</code>, then click <strong>Save</strong>
-        </div>
-      </div>
-      <div class="config-step">
-        <div class="config-step-num">3</div>
-        <div class="config-step-body">
-          Click <strong>Deploy</strong> → <strong>New deployment</strong> → Type: <strong>Web app</strong><br>
-          Set <em>Execute as</em>: <strong>Me</strong><br>
-          Set <em>Who has access</em>: <strong>Anyone</strong><br>
-          Click <strong>Deploy</strong> and authorise when prompted
-        </div>
-      </div>
-      <div class="config-step">
-        <div class="config-step-num">4</div>
-        <div class="config-step-body">
-          Copy the <strong>Web app URL</strong> (looks like <code>https://script.google.com/macros/s/...</code>) and paste it below
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Google Apps Script Web App URL</label>
-        <input class="config-url-input" type="url" id="api-url-input" placeholder="https://script.google.com/macros/s/..." value="${API_URL}">
-      </div>
-      <button class="btn-config-save" onclick="saveApiUrl()">Save & Connect →</button>
-
-      ${API_URL ? `<div style="margin-top:20px">
-        <button class="btn-refresh" onclick="refreshData()" style="width:100%;justify-content:center">↻ Refresh data from Google Sheets</button>
-      </div>` : ''}
-
-      <div style="margin-top:24px;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);font-size:12px;color:var(--muted);line-height:1.7">
-        <strong style="color:var(--text)">How logging works:</strong><br>
-        Paul logs sessions directly in the <strong>Training_Log</strong> tab of the Google Sheet — marking <em>Completed?</em> as <strong>Yes</strong> and filling in the actuals. The dashboard reads from the sheet automatically. No double-entry needed.
-      </div>
-    </div>`;
+  return `<div class="config-wrap">
+    <div class="section-title">${isFirstTime?'Welcome — Setup Required':'Setup'}</div>
+    <div class="section-sub">${isFirstTime?'Connect your Google Sheet to activate the dashboard':'Update your Google Apps Script URL'}</div>
+    <div class="config-step"><div class="config-step-num">1</div><div class="config-step-body"><strong>Open your Google Sheet</strong> → <strong>Extensions → Apps Script</strong></div></div>
+    <div class="config-step"><div class="config-step-num">2</div><div class="config-step-body">Paste in the <code>google_apps_script.gs</code> code → <strong>Save</strong></div></div>
+    <div class="config-step"><div class="config-step-num">3</div><div class="config-step-body"><strong>Deploy → New deployment</strong> → Type: <strong>Web app</strong><br>Execute as: <strong>Me</strong> · Who has access: <strong>Anyone</strong> → Deploy → Authorise</div></div>
+    <div class="config-step"><div class="config-step-num">4</div><div class="config-step-body">Copy the <strong>Web app URL</strong> and paste below</div></div>
+    <div style="margin-bottom:16px"><label style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px">Google Apps Script URL</label><input class="config-url-input" type="url" id="api-url-input" placeholder="https://script.google.com/macros/s/..." value="${API_URL}"></div>
+    <button class="btn-config-save" onclick="saveApiUrl()">Save & Connect →</button>
+    ${API_URL?`<div style="margin-top:12px"><button class="btn-refresh" onclick="refreshData()" style="width:100%;justify-content:center">↻ Refresh data from Google Sheets</button></div>`:''}
+    <div style="margin-top:20px;padding:14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);font-size:12px;color:var(--muted);line-height:1.7"><strong style="color:var(--text)">How it works:</strong><br>Paul logs sessions in the <strong>Training_Log</strong> tab — marking <em>Completed?</em> as <strong>Yes</strong> and filling in actuals. The dashboard reads from the sheet automatically. No double-entry.</div>
+  </div>`;
 }
 
 function saveApiUrl() {
-  const url = document.getElementById('api-url-input')?.value?.trim();
-  if (!url || !url.startsWith('https://')) { showToast('Please enter a valid URL', '#e84545'); return; }
-  API_URL = url;
-  localStorage.setItem(STORAGE_KEY, url);
-  trainingData = [];
-  showToast('Saved! Loading data...');
-  navigate('overview');
+  const url=document.getElementById('api-url-input')?.value?.trim();
+  if(!url||!url.startsWith('https://')){ showToast('Please enter a valid URL','#e84545'); return; }
+  API_URL=url; localStorage.setItem(STORAGE_KEY,url); trainingData=[];
+  showToast('Saved! Loading data...'); navigate('overview');
 }
 
 async function refreshData() {
-  trainingData = [];
-  lastFetch = 0;
-  showToast('Refreshing...');
-  await render();
-  showToast('Data refreshed ✓');
+  trainingData=[]; lastFetch=0; showToast('Refreshing...');
+  await render(); showToast('Data refreshed ✓');
 }
 
-// ─── INIT ──────────────────────────────────────────────────────────────────
+// Expose to global scope so onclick attributes work
+window.navigate = navigate;
+window.toggleWeek = toggleWeek;
+window.refreshData = refreshData;
+window.saveApiUrl = saveApiUrl;
+
 navigate('overview');
+setInterval(()=>{ if(lastFetchTime) updateSyncBadge('ok'); },60000);
 </script>
 </body>
 </html>
