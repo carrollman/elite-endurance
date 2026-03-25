@@ -267,8 +267,11 @@ async function fetchData(force) {
   if(!API_URL) return [];
   if(!force&&trainingData.length&&Date.now()-lastFetch<120000) return trainingData;
   try {
-    const r=await fetch(API_URL+'?action=getData');
-    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),10000);
+    const r=await fetch(API_URL+'?action=getData',{signal:controller.signal});
+    clearTimeout(timeout);
+    if(!r.ok) throw new Error('HTTP '+r.status);
     const json=await r.json();
     if(json.status!=='ok') throw new Error(json.error||'Bad response');
     trainingData=json.data; lastFetch=Date.now(); lastFetchTime=Date.now();
@@ -288,21 +291,42 @@ function navigate(tab) {
 async function render() {
   destroyCharts();
   const content=document.getElementById('content');
-  if(!API_URL&&currentTab!=='setup') { content.innerHTML=setupHTML(true); document.getElementById('hdr-sub').textContent='Setup required'; return; }
-  content.innerHTML='<div class="loading-state"><div class="spinner"></div><span>Loading...</span></div>';
-  const data=await fetchData();
-  if(fetchError&&!data.length&&currentTab!=='setup') {
-    content.innerHTML=`<div class="error-state"><div class="error-icon">⚠️</div><div class="error-title">Could not load data</div><div class="error-sub">Check your Google Apps Script URL in Setup, or verify the sheet is published correctly.</div><button class="btn-error-action" onclick="navigate('setup')">Go to Setup</button><br><br><button class="btn-refresh" style="margin:0 auto" onclick="refreshData()">↻ Try again</button></div>`;
+
+  if(!API_URL) {
+    document.getElementById('hdr-sub').textContent='Setup required';
+    content.innerHTML=setupHTML(true);
     return;
   }
+
+  if(currentTab==='setup') { content.innerHTML=setupHTML(false); return; }
+  if(currentTab==='plan') { renderPlan(currentWeek()); return; }
+  if(currentTab==='races') { renderRaces(); return; }
+
+  content.innerHTML='<div class="loading-state"><div class="spinner"></div><span>Fetching from Google Sheets...</span></div>';
+  const data=await fetchData();
+
+  if(fetchError&&!data.length) {
+    document.getElementById('content').innerHTML = [
+      '<div class="error-state">',
+      '<div class="error-icon">&#9888;&#65039;</div>',
+      '<div class="error-title">Could not load data</div>',
+      '<div class="error-sub">Usually a CORS issue or Apps Script not deployed correctly.<br><br>',
+      '<strong>Check:</strong><br>',
+      '1. Deployed as Web App<br>',
+      '2. Access set to <strong>Anyone</strong><br>',
+      '3. URL pasted in Setup tab</div>',
+      '<button class="btn-error-action" onclick="window.navigate('setup')">Go to Setup</button><br><br>',
+      '<button class="btn-refresh" style="margin:8px auto 0;display:flex" onclick="window.refreshData()">&#8635; Try again</button>',
+      '</div>'
+    ].join('');
+    return;
+  }
+
   const cw=currentWeek();
-  document.getElementById('hdr-sub').textContent=`Paul Carroll · W${cw} of 25`;
+  document.getElementById('hdr-sub').textContent='Paul Carroll · W'+cw+' of 25';
   if(currentTab==='overview') renderOverview(data,cw);
   else if(currentTab==='history') renderHistory(data);
   else if(currentTab==='load') renderLoad(data,cw);
-  else if(currentTab==='plan') renderPlan(cw);
-  else if(currentTab==='races') renderRaces();
-  else if(currentTab==='setup') content.innerHTML=setupHTML(false);
 }
 
 function generateInsights(ws,cw) {
