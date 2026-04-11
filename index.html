@@ -3,108 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Paul Carroll — Elite Endurance 2026</title>
+<title>Paul Carroll — Elite Endurance Performance Cockpit</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-:root{--bg:#0f1117;--bg2:#181c27;--bg3:#1e2333;--bd:rgba(255,255,255,0.08);--bd2:rgba(255,255,255,0.14);--tx:#e8eaf0;--mu:#8891a8;--te:#1bc4a0;--or:#f07830;--am:#f5c518;--re:#e84545;--bl:#4a90d9;--pu:#9b7dea;--gr:#4caf7a;--r:12px;--rs:8px}
+:root{--bg:#0f1117;--bg2:#181c27;--bg3:#1f2636;--bd:rgba(255,255,255,0.08);--tx:#e8eaf0;--mu:#95a0b8;--te:#22c55e;--or:#f97316;--bl:#60a5fa;--pu:#a78bfa;--re:#ef4444;--am:#fbbf24;--cy:#22d3ee;--r:14px;--rs:10px}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.5}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.45}
 button,input,select,textarea{font-family:inherit}
 .app{display:flex;flex-direction:column;min-height:100vh}
-.hdr{background:var(--bg2);border-bottom:1px solid var(--bd);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:40}
-.hdr-logo{font-size:12px;font-weight:700;color:var(--te);letter-spacing:1.1px;text-transform:uppercase}
-.hdr-sub{font-size:11px;color:var(--mu);margin-top:1px}
+.hdr{background:var(--bg2);border-bottom:1px solid var(--bd);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40}
+.hdr-logo{font-size:12px;font-weight:800;color:var(--te);letter-spacing:1.1px;text-transform:uppercase}
+.hdr-sub{font-size:11px;color:var(--mu);margin-top:2px}
 .hdr-r{display:flex;align-items:center;gap:10px}
-.sync{font-size:10px;color:var(--mu);background:var(--bg3);border:1px solid var(--bd);border-radius:20px;padding:3px 8px;white-space:nowrap;display:none}
-.sync.err{color:var(--re);border-color:rgba(232,69,69,.3)}
-.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#1bc4a0,#4a90d9);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
-.body{flex:1;overflow-y:auto;padding:16px 14px 90px}
+.sync{font-size:10px;color:var(--mu);background:var(--bg3);border:1px solid var(--bd);border-radius:999px;padding:3px 8px;display:none}
+.sync.err{color:var(--re);border-color:rgba(239,68,68,.35)}
+.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#60a5fa);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.body{flex:1;overflow-y:auto;padding:16px 14px 92px}
 .nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--bd);display:flex;z-index:50;padding-bottom:env(safe-area-inset-bottom,0px)}
 .nb{flex:1;background:transparent;border:none;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
 .ni{font-size:20px}
-.nl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--mu);transition:color .15s}
+.nl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mu)}
 .nl.on{color:var(--te)}
-.card{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:16px;margin-bottom:16px}
-.ct{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.sc{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;margin-bottom:0}
-.sl{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px}
-.sv{font-size:24px;font-weight:600;line-height:1}
-.ss{font-size:10px;color:var(--mu);margin-top:3px}
-.rc{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:12px 10px;text-align:center}
-.rn{font-size:11px;font-weight:600;line-height:1.2;margin-bottom:2px}
-.rd{font-size:10px;color:var(--mu);margin-bottom:8px}
-.ry{font-size:28px;font-weight:700;line-height:1}
-.rt{font-size:9px;color:var(--mu);margin-top:2px;margin-bottom:6px}
-.rb{font-size:10px;font-weight:600}
-.pbt{height:8px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden;margin-bottom:6px}
-.pbf{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--te),var(--bl));transition:width .5s}
-.pbl{display:flex;justify-content:space-between}
-.pbl span{font-size:9px;color:var(--mu)}
+.card{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:15px;margin-bottom:14px}
+.ct{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.g4{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.kpi{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:14px}
+.kpi .l{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
+.kpi .v{font-size:25px;font-weight:700;line-height:1}
+.kpi .s{font-size:10px;color:var(--mu);margin-top:5px}
+.banner{padding:14px;border-radius:12px;border:1px solid rgba(34,197,94,.2);background:rgba(34,197,94,.07);margin-bottom:14px}
+.banner b{display:block;font-size:14px;margin-bottom:4px}
+.ins{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;margin-bottom:8px;border:1px solid}
+.ins-red{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.22)}
+.ins-amber{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.2)}
+.ins-green{background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.18)}
+.ins-blue{background:rgba(96,165,250,.07);border-color:rgba(96,165,250,.18)}
+.ins .ic{font-size:16px;margin-top:1px}
+.ins .tt{font-weight:700;margin-bottom:2px}
 .cw{position:relative;width:100%}
-.leg{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap}
-.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mu)}
-.ld{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-.ins{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:var(--rs);margin-bottom:8px;border:1px solid}
-.ins-red{background:rgba(232,69,69,.08);border-color:rgba(232,69,69,.25)}
-.ins-amber{background:rgba(245,197,24,.06);border-color:rgba(245,197,24,.2)}
-.ins-green{background:rgba(76,175,122,.06);border-color:rgba(76,175,122,.2)}
-.ins-blue{background:rgba(74,144,217,.06);border-color:rgba(74,144,217,.2)}
-.ii{font-size:16px;flex-shrink:0;margin-top:1px}
-.it{font-size:13px;line-height:1.5}
-.itl{font-weight:600;margin-bottom:2px}
-.hmw{overflow-x:auto;padding-bottom:4px}
-.hmg{display:grid;gap:3px;width:max-content}
-.hmc{width:13px;height:13px;border-radius:2px;position:relative;cursor:default}
-.hmc:hover .hmt{display:block}
-.hmt{display:none;position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--bd2);border-radius:6px;padding:5px 8px;font-size:10px;white-space:nowrap;z-index:10;pointer-events:none}
-.hml{display:flex;align-items:center;gap:5px;margin-top:8px;font-size:10px;color:var(--mu);flex-wrap:wrap}
-.scard{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:10px}
-.smg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.smc{background:rgba(255,255,255,.03);border-radius:8px;padding:8px 10px}
-.sml{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
-.smv{font-size:15px;font-weight:600}
-.snt{font-size:12px;color:var(--mu);margin-top:8px;line-height:1.5}
+.leg{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.li{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mu)}
+.ld{width:10px;height:10px;border-radius:3px}
+.table{width:100%;border-collapse:collapse;font-size:12px}
+.table th,.table td{padding:9px 8px;border-top:1px solid rgba(255,255,255,.05);text-align:left;vertical-align:top}
+.table th{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.7px}
+.badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:10px;font-weight:700}
+.row-weak{color:#fca5a5}
+.row-strong{color:#86efac}
 .wcard{border:1px solid var(--bd);border-radius:var(--r);margin-bottom:8px;overflow:hidden;background:var(--bg3)}
-.wcard.cur{border-color:var(--te);background:rgba(27,196,160,.04)}
-.wh{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
-.whl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.wn{font-size:14px;font-weight:700}
+.wh{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;cursor:pointer}
+.whl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.wn{font-size:14px;font-weight:800}
 .wdt{font-size:10px;color:var(--mu)}
-.wpt{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600;background:rgba(74,144,217,.15);color:var(--bl)}
-.wch{color:var(--mu);font-size:14px;flex-shrink:0}
+.wpt{display:inline-block;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:700;background:rgba(96,165,250,.14);color:var(--bl)}
 .wb{padding:0 14px 14px}
-.wr{display:flex;gap:10px;padding:7px 0;border-top:1px solid rgba(255,255,255,.04)}
-.wrd{font-size:11px;font-weight:600;color:var(--mu);width:28px;flex-shrink:0;padding-top:1px}
+.wr{display:flex;gap:12px;padding:8px 0;border-top:1px solid rgba(255,255,255,.05)}
+.wrd{width:34px;flex-shrink:0;font-size:11px;font-weight:700;color:var(--mu)}
 .wrs{font-size:13px}
-.rgr{font-size:13px;color:var(--mu);margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.04)}
-.rgr strong{color:var(--tx);font-weight:500}
-.rwr{font-size:13px;color:var(--mu);margin-bottom:5px;padding-left:10px;border-left:2px solid rgba(255,255,255,.08)}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
-.btn-save{width:100%;background:var(--te);color:#0f1117;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;margin-top:4px;cursor:pointer}
-.btn-ref{background:transparent;border:1px solid var(--bd2);border-radius:var(--rs);padding:8px 16px;font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px;cursor:pointer}
-.fld label{display:block;font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
-.fld input,.fld select,.fld textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:var(--rs);padding:11px 13px;color:var(--tx);font-size:16px;outline:none;transition:border-color .15s}
-.fld input:focus,.fld select:focus{border-color:var(--te)}
+.empty,.ld-state,.err-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:240px;gap:12px;color:var(--mu);text-align:center}
 .spin{width:28px;height:28px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--te);border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.ld-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;gap:12px;color:var(--mu)}
-.err-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:10px;text-align:center;padding:24px}
-.err-title{font-size:16px;font-weight:600}
-.err-sub{font-size:13px;color:var(--mu);max-width:300px;line-height:1.7}
-.err-sub strong{color:var(--tx)}
-.btn-act{background:var(--te);color:#0f1117;border:none;border-radius:var(--rs);padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer;margin-top:6px}
-.empty{text-align:center;padding:60px 24px;color:var(--mu)}
-.setup-step{display:flex;gap:12px;margin-bottom:14px;padding:14px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r)}
-.setup-num{width:24px;height:24px;border-radius:50%;background:var(--te);color:#0f1117;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.setup-body{font-size:13px;line-height:1.6;color:var(--mu)}
-.setup-body strong{color:var(--tx)}
-.setup-body code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px;font-size:12px;color:var(--te)}
-.url-inp{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:var(--rs);padding:12px 14px;color:var(--tx);font-size:13px;outline:none;margin-top:6px}
-.url-inp:focus{border-color:var(--te)}
-.btn-conn{background:var(--te);color:#0f1117;border:none;border-radius:var(--rs);padding:12px 24px;font-size:14px;font-weight:700;width:100%;margin-top:8px;cursor:pointer}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:100;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4);opacity:0;transition:opacity .2s;pointer-events:none}
+.btn{background:transparent;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px;color:var(--mu);font-size:12px;cursor:pointer}
+.url-inp{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;color:var(--tx);font-size:13px;outline:none;margin-top:8px}
+.btn-pri{background:var(--te);color:#072814;border:none;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:800;cursor:pointer;margin-top:10px;width:100%}
+.race{border:1px solid var(--bd);border-radius:var(--r);padding:14px;background:var(--bg3);margin-bottom:10px}
+.race .nm{font-size:15px;font-weight:800;margin-bottom:2px}
+.race .dt{font-size:12px;color:var(--mu);margin-bottom:8px}
+.race-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.rmini{background:rgba(255,255,255,.04);padding:8px 10px;border-radius:10px}
+.rmini .l{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px}
+.rmini .v{font-size:16px;font-weight:700}
+.toast{position:fixed;bottom:82px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:999px;font-size:13px;font-weight:700;z-index:100;opacity:0;transition:opacity .2s;pointer-events:none;background:var(--te);color:#072814}
 .toast.on{opacity:1}
 </style>
 </head>
@@ -112,7 +83,7 @@ button,input,select,textarea{font-family:inherit}
 <div class="app">
   <header class="hdr">
     <div>
-      <div class="hdr-logo">Elite Endurance</div>
+      <div class="hdr-logo">Elite Performance Cockpit</div>
       <div class="hdr-sub" id="hdr-sub">Paul Carroll</div>
     </div>
     <div class="hdr-r">
@@ -120,681 +91,1009 @@ button,input,select,textarea{font-family:inherit}
       <div class="av">PC</div>
     </div>
   </header>
-  <main class="body" id="body">
-    <div class="ld-state"><div class="spin"></div><span>Loading...</span></div>
-  </main>
+  <main class="body" id="body"><div class="ld-state"><div class="spin"></div><span>Loading...</span></div></main>
   <nav class="nav">
-    <button class="nb" onclick="go('overview')"><span class="ni">&#128202;</span><span class="nl" id="nl-overview">Overview</span></button>
-    <button class="nb" onclick="go('history')"><span class="ni">&#128203;</span><span class="nl" id="nl-history">History</span></button>
-    <button class="nb" onclick="go('load')"><span class="ni">&#9889;</span><span class="nl" id="nl-load">Load</span></button>
-    <button class="nb" onclick="go('plan')"><span class="ni">&#128197;</span><span class="nl" id="nl-plan">Plan</span></button>
-    <button class="nb" onclick="go('races')"><span class="ni">&#127937;</span><span class="nl" id="nl-races">Races</span></button>
-    <button class="nb" onclick="go('setup')"><span class="ni">&#9881;&#65039;</span><span class="nl" id="nl-setup">Setup</span></button>
+    <button class="nb" onclick="go('overview')"><span class="ni">📊</span><span class="nl" id="nl-overview">Overview</span></button>
+    <button class="nb" onclick="go('load')"><span class="ni">⚡</span><span class="nl" id="nl-load">Load</span></button>
+    <button class="nb" onclick="go('quality')"><span class="ni">🎯</span><span class="nl" id="nl-quality">Quality</span></button>
+    <button class="nb" onclick="go('history')"><span class="ni">📋</span><span class="nl" id="nl-history">History</span></button>
+    <button class="nb" onclick="go('plan')"><span class="ni">📅</span><span class="nl" id="nl-plan">Plan</span></button>
+    <button class="nb" onclick="go('races')"><span class="ni">🏁</span><span class="nl" id="nl-races">Races</span></button>
+    <button class="nb" onclick="go('setup')"><span class="ni">⚙️</span><span class="nl" id="nl-setup">Setup</span></button>
   </nav>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-var SKEY = 'ee_api_url_v2';
-var APIURL = localStorage.getItem(SKEY) || '';
-var TAB = 'overview';
-var DATA = [];
-var LAST_FETCH = 0;
-var LAST_TIME = null;
-var CHARTS = {};
-var FETCH_ERR = false;
+const SKEY = 'ee_api_url_v3';
+let APIURL = localStorage.getItem(SKEY) || '';
+let TAB = 'overview';
+let DATA = [];
+let LAST_FETCH = 0;
+let LAST_TIME = null;
+let FETCH_ERR = false;
+let CHARTS = {};
 
-var PLAN = [
-  [1,'2026-03-16','Strength Session A','4x1km @ 10k pace','Easy run 6km','Strength B + 5km','Rest','Long run 10km Z2','Easy cycle 60min','Base + 10k build'],
-  [2,'2026-03-23','Strength Session A','5x800m @ 10k pace','Easy run 6km','Strength B + 5km','Rest','Long run 11km','Easy cycle 60min','Base + 10k build'],
-  [3,'2026-03-30','Strength Session A','5x1km @ 10k pace','Easy run 6km','Strength B + 6km','Rest','Long run 12km','Recovery run 5km','Base + 10k build'],
-  [4,'2026-04-06','Strength Session A','3x2km tempo','Easy run 6km','Strength B + 6km','Rest','Long run 12km','Easy cycle 60min','Base + 10k build'],
-  [5,'2026-04-13','Strength Session A','6x1km @ 10k pace','Easy run 6km','Strength B + 6km','Rest','Long run 13km','Easy cycle 60min','10k peak'],
-  [6,'2026-04-20','Strength Session A','4x1.5km threshold','Easy run 6km','Strength B + 6km','Rest','Long run 14km','Recovery run 5km','10k peak'],
-  [7,'2026-04-27','Strength Session A','5x1km race pace','Easy run 5km','Strength B + 5km','Rest','Long run 12km','Easy cycle 45min','10k peak'],
-  [8,'2026-05-04','Light strength','4x800m race pace','Easy run 5km','Easy run 4km','Rest','Killarney 10k','Recovery spin 30min','10k taper/race'],
-  [9,'2026-05-11','Strength Session A','Tempo run 6km','Cycle 60min Z2','Strength B + 5km','Rest','Long ride 50km','Easy run 6km','Cycle base'],
-  [10,'2026-05-18','Strength Session A','4x1km intervals','Cycle 75min Z2','Strength B + 6km','Rest','Long ride 70km','Easy run 6km','Cycle base'],
-  [11,'2026-05-25','Strength Session A','Tempo run 7km','Cycle 75min Z2','Strength B + 5km','Rest','Long ride 90km','Easy run 6km','Cycle base'],
-  [12,'2026-06-01','Strength Session A','5x1km intervals','Cycle 90min Z2','Strength B + 6km','Rest','Long ride 110km','Easy run 6km','Cycle base'],
-  [13,'2026-06-08','Strength Session A','Tempo run 8km','Cycle 90min + tempo','Strength B + 5km','Rest','Long ride 130km','Easy run 6km','Ring build'],
-  [14,'2026-06-15','Strength Session A','4x1km intervals','Cycle 75min Z2','Strength B + 5km','Rest','Long ride 150km','Recovery run 5km','Ring build'],
-  [15,'2026-06-22','Light strength','Easy run 6km','Easy spin 45min','Rest','Easy spin 20min','Ring of Kerry 170km','Recovery','Ring taper/race'],
-  [16,'2026-06-29','Strength Session A','Tempo run 8km','Easy run 6km','Strength B + 6km','Rest','Long run 14km','Recovery run 5km','Half build'],
-  [17,'2026-07-06','Strength Session A','5x1km intervals','Easy run 6km','Strength B + 6km','Rest','Long run 15km','Easy cycle 45min','Half build'],
-  [18,'2026-07-13','Strength Session A','Tempo run 9km','Easy run 7km','Strength B + 6km','Rest','Long run 16km','Recovery run 5km','Half build'],
-  [19,'2026-07-20','Strength Session A','6x1km intervals','Easy run 7km','Strength B + 7km','Rest','Long run 17km','Easy cycle 45min','Half build'],
-  [20,'2026-07-27','Strength Session A','Tempo run 10km','Easy run 7km','Strength B + 6km','Rest','Long run 18km','Recovery run 5km','Half build'],
-  [21,'2026-08-03','Strength Session A','3x3km tempo','Easy run 7km','Strength B + 6km','Rest','Long run 18km','Recovery run 5km','Half peak'],
-  [22,'2026-08-10','Strength Session A','5x1km intervals','Easy run 6km','Strength B + 6km','Rest','Long run 16km','Recovery run 5km','Half peak'],
-  [23,'2026-08-17','Light strength','Tempo 6km','Easy run 6km','Easy run 6km','Rest','Long run 12km','Recovery','Half taper'],
-  [24,'2026-08-24','Light strength','4x800m race pace','Easy run 6km','Easy run 5km','Rest','Dingle Half Marathon','Recovery','Race week'],
-  [25,'2026-08-31','Recovery','Optional easy jog','Rest','Mobility','Rest','Optional easy walk','Rest','Post-race recovery']
+const PLAN = [
+  {
+    "week": 1,
+    "start": "2026-03-16",
+    "end": "2026-03-22",
+    "phase": "Foundation + 10k prep",
+    "goal": "Re-establish frequency and strength rhythm",
+    "days": {
+      "Mon": "Strength A + strides",
+      "Tue": "5x4 min threshold / 90s float",
+      "Wed": "Easy run 6km Z2",
+      "Thu": "Strength B + 5km easy",
+      "Fri": "Rest / mobility",
+      "Sat": "Long run 10km easy",
+      "Sun": "Easy spin 60min + cadence"
+    },
+    "focus": "Protect easy intensity; don't chase pace"
+  },
+  {
+    "week": 2,
+    "start": "2026-03-23",
+    "end": "2026-03-29",
+    "phase": "Foundation + 10k prep",
+    "goal": "Aerobic support + economy",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "6x800m @ 10k rhythm",
+      "Wed": "Easy run 6km Z2",
+      "Thu": "Strength B + 5km easy",
+      "Fri": "Rest / mobility",
+      "Sat": "Long run 11km easy",
+      "Sun": "Easy spin 60min"
+    },
+    "focus": "Keep sessions smooth, not maximal"
+  },
+  {
+    "week": 3,
+    "start": "2026-03-30",
+    "end": "2026-04-05",
+    "phase": "10k build",
+    "goal": "Threshold density",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "3x8 min threshold",
+      "Wed": "Easy run 7km Z2",
+      "Thu": "Strength B + 6km easy",
+      "Fri": "Rest / mobility",
+      "Sat": "Long run 12km easy",
+      "Sun": "Recovery run 5km"
+    },
+    "focus": "Threshold is the main target"
+  },
+  {
+    "week": 4,
+    "start": "2026-04-06",
+    "end": "2026-04-12",
+    "phase": "Deload",
+    "goal": "Absorb block and freshen",
+    "days": {
+      "Mon": "Strength A (reduced volume)",
+      "Tue": "10x1 min on / 1 min off",
+      "Wed": "Easy run 6km Z2",
+      "Thu": "Mobility + optional 4km easy",
+      "Fri": "Rest",
+      "Sat": "Long run 10km easy",
+      "Sun": "Easy cycle 45min"
+    },
+    "focus": "Back off before the next push"
+  },
+  {
+    "week": 5,
+    "start": "2026-04-13",
+    "end": "2026-04-19",
+    "phase": "10k specific",
+    "goal": "Race pace efficiency",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "5x1km @ 10k pace",
+      "Wed": "Easy run 6km Z2",
+      "Thu": "Strength B + 5km easy",
+      "Fri": "Rest / mobility",
+      "Sat": "Long run 13km easy",
+      "Sun": "Easy spin 60min"
+    },
+    "focus": "Hold form under race rhythm"
+  },
+  {
+    "week": 6,
+    "start": "2026-04-20",
+    "end": "2026-04-26",
+    "phase": "10k specific",
+    "goal": "Threshold + economy",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "2x3km threshold",
+      "Wed": "Easy run 6km Z2",
+      "Thu": "Strength B + 5km easy",
+      "Fri": "Rest / mobility",
+      "Sat": "Long run 14km easy",
+      "Sun": "Recovery run 5km"
+    },
+    "focus": "Controlled threshold, not time trial"
+  },
+  {
+    "week": 7,
+    "start": "2026-04-27",
+    "end": "2026-05-03",
+    "phase": "10k taper",
+    "goal": "Sharpen and freshen",
+    "days": {
+      "Mon": "Light strength",
+      "Tue": "6x400m @ 5k effort / full recovery",
+      "Wed": "Easy run 5km",
+      "Thu": "Mobility + 4km easy",
+      "Fri": "Rest",
+      "Sat": "Long run 10km relaxed",
+      "Sun": "Easy spin 40min"
+    },
+    "focus": "Feel snappy, not tired"
+  },
+  {
+    "week": 8,
+    "start": "2026-05-04",
+    "end": "2026-05-10",
+    "phase": "10k race week",
+    "goal": "Freshness and execution",
+    "days": {
+      "Mon": "Light strength + strides",
+      "Tue": "3x800m @ 10k pace",
+      "Wed": "Easy run 5km",
+      "Thu": "20min shakeout",
+      "Fri": "Rest",
+      "Sat": "Killarney 10k race",
+      "Sun": "Recovery spin 30min"
+    },
+    "focus": "Arrive fresh; race controlled first 3km"
+  },
+  {
+    "week": 9,
+    "start": "2026-05-11",
+    "end": "2026-05-17",
+    "phase": "Transition + bike base",
+    "goal": "Shift emphasis to bike durability",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "Tempo run 20min continuous",
+      "Wed": "Bike 60min Z2",
+      "Thu": "Strength B + 5km easy",
+      "Fri": "Rest",
+      "Sat": "Long ride 50km",
+      "Sun": "Easy run 6km"
+    },
+    "focus": "Keep run touch while bike load grows"
+  },
+  {
+    "week": 10,
+    "start": "2026-05-18",
+    "end": "2026-05-24",
+    "phase": "Bike build",
+    "goal": "Aerobic bike volume",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "6x3 min hill / steady effort",
+      "Wed": "Bike 75min Z2",
+      "Thu": "Strength B + 5km easy",
+      "Fri": "Rest",
+      "Sat": "Long ride 70km",
+      "Sun": "Easy run 6km"
+    },
+    "focus": "Fuel every ride >75 min"
+  },
+  {
+    "week": 11,
+    "start": "2026-05-25",
+    "end": "2026-05-31",
+    "phase": "Bike build",
+    "goal": "Muscular endurance on bike",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "Tempo run 25min",
+      "Wed": "Bike 80min incl 3x10min tempo",
+      "Thu": "Strength B + 5km easy",
+      "Fri": "Rest",
+      "Sat": "Long ride 90km",
+      "Sun": "Easy run 6km"
+    },
+    "focus": "Practice fueling and pacing"
+  },
+  {
+    "week": 12,
+    "start": "2026-06-01",
+    "end": "2026-06-07",
+    "phase": "Bike build",
+    "goal": "Long-ride durability",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "4x1km threshold",
+      "Wed": "Bike 90min Z2",
+      "Thu": "Strength B + 5km easy",
+      "Fri": "Rest",
+      "Sat": "Long ride 110km",
+      "Sun": "Easy run 6km"
+    },
+    "focus": "Stay disciplined with effort"
+  },
+  {
+    "week": 13,
+    "start": "2026-06-08",
+    "end": "2026-06-14",
+    "phase": "Ring build",
+    "goal": "Tempo under bike fatigue",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "Tempo run 30min",
+      "Wed": "Bike 90min incl 4x8min tempo",
+      "Thu": "Strength B + 5km easy",
+      "Fri": "Rest",
+      "Sat": "Long ride 130km",
+      "Sun": "Easy run 5km"
+    },
+    "focus": "Nail fueling from first hour"
+  },
+  {
+    "week": 14,
+    "start": "2026-06-15",
+    "end": "2026-06-21",
+    "phase": "Ring peak",
+    "goal": "Big endurance weekend",
+    "days": {
+      "Mon": "Strength A (reduced volume)",
+      "Tue": "4x5 min threshold",
+      "Wed": "Bike 75min Z2",
+      "Thu": "Mobility + 5km easy",
+      "Fri": "Rest",
+      "Sat": "Long ride 150km",
+      "Sun": "Recovery run 5km"
+    },
+    "focus": "Biggest durability week"
+  },
+  {
+    "week": 15,
+    "start": "2026-06-22",
+    "end": "2026-06-28",
+    "phase": "Ring taper / race",
+    "goal": "Freshness for long sportive",
+    "days": {
+      "Mon": "Light strength",
+      "Tue": "Easy run 6km",
+      "Wed": "Easy spin 45min",
+      "Thu": "Rest",
+      "Fri": "Easy spin 20min + openers",
+      "Sat": "Ring of Kerry 170km",
+      "Sun": "Recovery / walk"
+    },
+    "focus": "Ride conservatively early and fuel aggressively"
+  },
+  {
+    "week": 16,
+    "start": "2026-06-29",
+    "end": "2026-07-05",
+    "phase": "Run rebuild",
+    "goal": "Restore run rhythm",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "Tempo run 25min",
+      "Wed": "Easy run 6km",
+      "Thu": "Strength B + 6km easy",
+      "Fri": "Rest / mobility",
+      "Sat": "Long run 14km",
+      "Sun": "Recovery run 5km"
+    },
+    "focus": "Back to consistent run frequency"
+  },
+  {
+    "week": 17,
+    "start": "2026-07-06",
+    "end": "2026-07-12",
+    "phase": "Half build",
+    "goal": "Threshold density",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "4x2km threshold",
+      "Wed": "Easy run 6km",
+      "Thu": "Strength B + 6km easy",
+      "Fri": "Rest / mobility",
+      "Sat": "Long run 15km",
+      "Sun": "Easy spin 45min"
+    },
+    "focus": "Strong aerobic work, not all-out"
+  },
+  {
+    "week": 18,
+    "start": "2026-07-13",
+    "end": "2026-07-19",
+    "phase": "Half build",
+    "goal": "Durability + economy",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "Tempo run 35min",
+      "Wed": "Easy run 7km",
+      "Thu": "Strength B + 6km easy",
+      "Fri": "Rest / mobility",
+      "Sat": "Long run 16km",
+      "Sun": "Recovery run 5km"
+    },
+    "focus": "Keep quality steady"
+  },
+  {
+    "week": 19,
+    "start": "2026-07-20",
+    "end": "2026-07-26",
+    "phase": "Half build",
+    "goal": "Race pace durability",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "3x3km at HM effort",
+      "Wed": "Easy run 7km",
+      "Thu": "Strength B + 6km easy",
+      "Fri": "Rest / mobility",
+      "Sat": "Long run 17km incl last 3km steady",
+      "Sun": "Easy spin 45min"
+    },
+    "focus": "Learn half-marathon rhythm"
+  },
+  {
+    "week": 20,
+    "start": "2026-07-27",
+    "end": "2026-08-02",
+    "phase": "Half build",
+    "goal": "Volume + control",
+    "days": {
+      "Mon": "Strength A",
+      "Tue": "6x1km threshold",
+      "Wed": "Easy run 7km",
+      "Thu": "Strength B + 6km easy",
+      "Fri": "Rest / mobility",
+      "Sat": "Long run 18km easy",
+      "Sun": "Recovery run 5km"
+    },
+    "focus": "No hero sessions"
+  },
+  {
+    "week": 21,
+    "start": "2026-08-03",
+    "end": "2026-08-09",
+    "phase": "Half specific",
+    "goal": "Sustained threshold",
+    "days": {
+      "Mon": "Strength A (reduced volume)",
+      "Tue": "2x4km at HM effort",
+      "Wed": "Easy run 7km",
+      "Thu": "Mobility + 6km easy",
+      "Fri": "Rest",
+      "Sat": "Long run 18km incl 2x3km steady",
+      "Sun": "Recovery run 5km"
+    },
+    "focus": "Specific endurance matters most"
+  },
+  {
+    "week": 22,
+    "start": "2026-08-10",
+    "end": "2026-08-16",
+    "phase": "Half specific",
+    "goal": "Peak specificity",
+    "days": {
+      "Mon": "Light strength",
+      "Tue": "5x1km at 10k effort",
+      "Wed": "Easy run 6km",
+      "Thu": "6km easy + strides",
+      "Fri": "Rest",
+      "Sat": "Long run 16km w/ final 20min at HM effort",
+      "Sun": "Recovery run 5km"
+    },
+    "focus": "Last meaningful workload"
+  },
+  {
+    "week": 23,
+    "start": "2026-08-17",
+    "end": "2026-08-23",
+    "phase": "Half taper",
+    "goal": "Drop volume, keep touch",
+    "days": {
+      "Mon": "Light strength",
+      "Tue": "Tempo 20min",
+      "Wed": "Easy run 6km",
+      "Thu": "5km easy + strides",
+      "Fri": "Rest",
+      "Sat": "Long run 12km easy",
+      "Sun": "Recovery / walk"
+    },
+    "focus": "Protect freshness"
+  },
+  {
+    "week": 24,
+    "start": "2026-08-24",
+    "end": "2026-08-30",
+    "phase": "Race week",
+    "goal": "Sharpen and race",
+    "days": {
+      "Mon": "Mobility + light activation",
+      "Tue": "4x800m @ HM-10k feel",
+      "Wed": "Easy run 5km",
+      "Thu": "20min shakeout",
+      "Fri": "Rest",
+      "Sat": "Dingle Half Marathon",
+      "Sun": "Recovery / walk"
+    },
+    "focus": "Fresh legs win now"
+  },
+  {
+    "week": 25,
+    "start": "2026-08-31",
+    "end": "2026-09-06",
+    "phase": "Recovery",
+    "goal": "Unload and reset",
+    "days": {
+      "Mon": "Recovery mobility",
+      "Tue": "Optional easy jog 30min",
+      "Wed": "Rest",
+      "Thu": "Mobility / tissue care",
+      "Fri": "Rest",
+      "Sat": "Optional easy walk",
+      "Sun": "Rest"
+    },
+    "focus": "Reflect and rebuild"
+  }
 ];
 
-var PLANNED_KM = [10,11,12,12,13,14,12,0,6,6,6,6,6,5,0,14,15,16,17,18,18,16,12,0,0];
+const RACES = [
+  {name:'Killarney 10k', date:new Date('2026-05-09'), dist:'10k', target:'Sub-46', focus:'Controlled first 3 km, commit from 7 km'},
+  {name:'Ring of Kerry', date:new Date('2026-07-04'), dist:'170k', target:'Strong completion', focus:'Ride below ego early, fuel from first 30 min'},
+  {name:'Dingle Half Marathon', date:new Date('2026-09-05'), dist:'21.1k', target:'Sub-1:40', focus:'Relaxed first 5 km, race the final 5 km'}
+];
 
-var R1 = new Date('2026-05-09');
-var R2 = new Date('2026-07-04');
-var R3 = new Date('2026-09-05');
+function parseDate(v) {
+  if (!v && v !== 0) return null;
+  if (typeof v === 'number') {
+    const base = new Date(Date.UTC(1899,11,30));
+    base.setUTCDate(base.getUTCDate() + Math.floor(v));
+    return new Date(base.getUTCFullYear(), base.getUTCMonth(), base.getUTCDate());
+  }
+  if (typeof v === 'string') {
+    const s = v.split('T')[0];
+    const d = new Date(s);
+    if (!isNaN(d.getTime())) return d;
+  }
+  return null;
+}
+function startOfDay(d) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
+function today() { return startOfDay(new Date()); }
+function fmtDate(d) { return d ? d.toLocaleDateString('en-IE', {weekday:'short', day:'numeric', month:'short'}) : '-'; }
+function fmtShort(d) { return d ? d.toLocaleDateString('en-IE', {day:'numeric', month:'short'}) : '-'; }
+function daysUntil(d) { const diff = Math.ceil((startOfDay(d)-today())/86400000); return diff > 0 ? diff : 0; }
+function pn(v) { const n = parseFloat(v); return isNaN(n) ? null : n; }
+function txt(v) { return v == null ? '' : String(v); }
+function ltxt(v) { return txt(v).trim().toLowerCase(); }
+function isDone(r) { return ltxt(r['Completed?']) === 'yes'; }
+function getKey(r, key, fallback='') { return r[key] != null ? r[key] : fallback; }
 
-function daysUntil(d) {
-  var now = new Date(); now.setHours(0,0,0,0);
-  var diff = Math.ceil((d - now) / 86400000);
-  return diff > 0 ? diff : 0;
+function inferDiscipline(r) {
+  const d = ltxt(r['Discipline']);
+  if (d) return d;
+  const t = [r['Session Type'], r['Planned Session'], r['Actual Description']].map(ltxt).join(' ');
+  if (/\b(ride|cycle|spin|bike)\b/.test(t)) return 'cycle';
+  if (/\bstrength\b/.test(t)) return 'strength';
+  if (/\b(rest|walk|recovery|mobility)\b/.test(t)) return 'recovery';
+  return 'run';
+}
+function inferSubtype(r) {
+  const s = ltxt(r['Session Subtype'] || r['Actual Description'] || r['Planned Session']);
+  if (/race/.test(s)) return 'race';
+  if (/long ride/.test(s)) return 'long ride';
+  if (/long run/.test(s)) return 'long run';
+  if (/threshold/.test(s)) return 'threshold';
+  if (/tempo/.test(s)) return 'tempo';
+  if (/interval|\d+\s*[x×]\s*\d|400m|800m|1km/.test(s)) return 'intervals';
+  if (/easy run|recovery run|shakeout|jog/.test(s)) return 'easy run';
+  if (/bike|cycle|ride|spin/.test(s)) return 'bike endurance';
+  if (/strength/.test(s)) return 'strength';
+  return 'general';
+}
+function isKeySession(r) {
+  if (ltxt(r['Key Session?']) === 'yes') return true;
+  return ['race','long ride','long run','threshold','tempo','intervals'].includes(inferSubtype(r));
 }
 
 function curWeek() {
-  var s = new Date('2026-03-16'); s.setHours(0,0,0,0);
-  var n = new Date(); n.setHours(0,0,0,0);
-  var w = Math.floor((n - s) / (7*86400000)) + 1;
-  return Math.max(1, Math.min(25, w));
-}
-
-function pn(v) {
-  if (v === null || v === undefined || v === '') return null;
-  var n = parseFloat(v);
-  return isNaN(n) ? null : n;
-}
-
-function isDone(r) {
-  return String(r['Completed?'] || '').trim().toLowerCase() === 'yes';
-}
-
-function wStats(data) {
-  var weeks = {};
-  for (var w = 1; w <= 25; w++) {
-    weeks[w] = {run:0, cycle:0, dur:0, load:0, rpes:[], fats:[], done:0, total:0};
+  const t = today();
+  for (const p of PLAN) {
+    const st = startOfDay(new Date(p.start));
+    const en = startOfDay(new Date(p.end));
+    if (t >= st && t <= en) return p.week;
   }
-  for (var i = 0; i < data.length; i++) {
-    var r = data[i];
-    var w = parseInt(r['Week']);
-    if (!weeks[w]) continue;
-    weeks[w].total++;
-    if (isDone(r)) {
-      weeks[w].done++;
-      var run = pn(r['Run Distance (km)']) || 0;
-      var cyc = pn(r['Cycle Distance (km)']) || 0;
-      var dur = pn(r['Duration (min)']) || 0;
-      var rpe = pn(r['RPE']);
-      var fat = pn(r['Fatigue (1-5)']);
-      weeks[w].run += run;
-      weeks[w].cycle += cyc;
-      weeks[w].dur += dur;
-      if (dur > 0 && rpe !== null && rpe > 0) weeks[w].load += dur * rpe;
-      if (rpe !== null && rpe > 0) weeks[w].rpes.push(rpe);
-      if (fat !== null && fat > 0) weeks[w].fats.push(fat);
-    }
-  }
-  var out = [];
-  for (var w = 1; w <= 25; w++) {
-    var d = weeks[w];
-    var ar = d.rpes.length ? d.rpes.reduce(function(a,b){return a+b;},0)/d.rpes.length : null;
-    var af = d.fats.length ? d.fats.reduce(function(a,b){return a+b;},0)/d.fats.length : null;
-    out.push({
-      week: w,
-      run: Math.round(d.run*10)/10,
-      cycle: Math.round(d.cycle*10)/10,
-      dur: Math.round(d.dur),
-      load: Math.round(d.load),
-      avgRpe: ar ? Math.round(ar*10)/10 : null,
-      avgFat: af ? Math.round(af*10)/10 : null,
-      done: d.done,
-      total: d.total,
-      pct: d.total > 0 ? Math.round((d.done/d.total)*100) : 0,
-      plan: PLANNED_KM[w-1]
+  if (t < new Date(PLAN[0].start)) return 1;
+  return PLAN[PLAN.length-1].week;
+}
+
+function weeklyStats(data) {
+  const out = [];
+  for (let i=0;i<PLAN.length;i++) {
+    const p = PLAN[i];
+    const weekRows = data.filter(r => Number(r['Week']) === p.week);
+    const doneRows = weekRows.filter(isDone);
+    const fatigueVals = doneRows.map(r => pn(r['Fatigue (1-5)'])).filter(v => v != null && v > 0);
+    const sleepVals = doneRows.map(r => pn(r['Sleep (h)'])).filter(v => v != null && v > 0);
+    const week = {
+      week: p.week,
+      phase: p.phase,
+      goal: p.goal,
+      start: new Date(p.start),
+      end: new Date(p.end),
+      runKm: 0, cycleKm: 0, duration: 0,
+      runLoad: 0, bikeLoad: 0, strengthLoad: 0, totalLoad: 0,
+      keyPlanned: 0, keyHit: 0,
+      avgFatigue: fatigueVals.length ? fatigueVals.reduce((a,b)=>a+b,0)/fatigueVals.length : null,
+      avgSleep: sleepVals.length ? sleepVals.reduce((a,b)=>a+b,0)/sleepVals.length : null,
+      sessionsDone: doneRows.length,
+      rows: doneRows
+    };
+    Object.values(p.days).forEach(x => {
+      const s = txt(x).toLowerCase();
+      if (/(threshold|tempo|\d+\s*[x×]\s*\d|long run|long ride|race)/.test(s)) week.keyPlanned++;
     });
+    doneRows.forEach(r => {
+      const runKm = pn(r['Run Distance (km)']) || 0;
+      const cycleKm = pn(r['Cycle Distance (km)']) || 0;
+      const dur = pn(r['Duration (min)']) || 0;
+      const rpe = pn(r['RPE']) || 0;
+      const srpe = pn(r['sRPE Load']) || (dur && rpe ? dur*rpe : 0);
+      const disc = inferDiscipline(r);
+      week.runKm += runKm;
+      week.cycleKm += cycleKm;
+      week.duration += dur;
+      if (disc === 'cycle') week.bikeLoad += srpe;
+      else if (disc === 'strength') week.strengthLoad += (pn(r['Strength Load']) || srpe*0.65);
+      else if (disc === 'hybrid') {
+        week.runLoad += srpe;
+        week.strengthLoad += (pn(r['Strength Load']) || srpe*0.65);
+      } else {
+        week.runLoad += srpe;
+      }
+      if (isKeySession(r)) week.keyHit++;
+    });
+    week.totalLoad = week.runLoad + week.bikeLoad + week.strengthLoad;
+    out.push(week);
+  }
+  for (let i=0;i<out.length;i++) {
+    const recent = out.slice(Math.max(0, i-3), i+1).map(w => w.totalLoad).filter(v => v > 0);
+    out[i].acute = out[i].totalLoad;
+    out[i].chronic = recent.length === 4 ? recent.reduce((a,b)=>a+b,0)/recent.length : null;
+    out[i].ac = out[i].chronic ? out[i].acute / out[i].chronic : null;
+    if (recent.length === 4) {
+      const mean = recent.reduce((a,b)=>a+b,0)/recent.length;
+      const variance = recent.reduce((a,b)=>a+Math.pow(b-mean,2),0)/recent.length;
+      const sd = Math.sqrt(variance);
+      out[i].monotony = sd ? mean/sd : null;
+      out[i].strain = out[i].monotony ? out[i].totalLoad * out[i].monotony : null;
+    } else {
+      out[i].monotony = null;
+      out[i].strain = null;
+    }
+    out[i].keyPct = out[i].keyPlanned ? out[i].keyHit / out[i].keyPlanned : null;
+    const fatiguePenalty = out[i].avgFatigue != null ? Math.max(0, (out[i].avgFatigue - 2.5) * 1.5) : 0;
+    const sleepPenalty = out[i].avgSleep != null ? Math.max(0, 7 - out[i].avgSleep) : 0;
+    const raw = 10 - fatiguePenalty - sleepPenalty;
+    out[i].readiness = (out[i].avgFatigue != null || out[i].avgSleep != null) ? Math.max(1, Math.min(10, Math.round(raw*10)/10)) : null;
   }
   return out;
 }
 
-function toast(msg, col) {
-  var el = document.getElementById('toast');
-  el.textContent = msg;
-  el.style.background = col || '#1bc4a0';
-  el.style.color = col ? '#fff' : '#0f1117';
-  el.className = 'toast on';
-  setTimeout(function(){ el.className = 'toast'; }, 2500);
+function historyRows(data) {
+  return data.filter(isDone).map(r => {
+    const date = parseDate(r['Date']);
+    return {
+      date, week: Number(r['Week'])||0, planned: txt(r['Planned Session']),
+      actual: txt(r['Actual Description']) || txt(r['Planned Session']),
+      subtype: inferSubtype(r), disc: inferDiscipline(r),
+      runKm: pn(r['Run Distance (km)'])||0, cycleKm: pn(r['Cycle Distance (km)'])||0,
+      dur: pn(r['Duration (min)'])||0, rpe: pn(r['RPE']), fatigue: pn(r['Fatigue (1-5)']),
+      notes: txt(r['Notes'])
+    };
+  }).sort((a,b)=>b.date-a.date);
 }
 
+function qualityMetrics(data, ws) {
+  const done = historyRows(data);
+  const last4 = ws.slice(Math.max(0, curWeek()-4), curWeek());
+  const longRuns = done.filter(x => x.subtype === 'long run').slice().sort((a,b)=>a.date-b.date);
+  const longRides = done.filter(x => x.subtype === 'long ride' || x.disc === 'cycle').slice().sort((a,b)=>a.date-b.date);
+  const thresholdSessions = done.filter(x => ['threshold','tempo','intervals'].includes(x.subtype));
+  return {
+    latestLongRun: longRuns.length ? longRuns[longRuns.length-1] : null,
+    latestLongRide: longRides.length ? longRides[longRides.length-1] : null,
+    bestLongRun: longRuns.reduce((m,x)=>Math.max(m,x.runKm),0),
+    bestLongRide: longRides.reduce((m,x)=>Math.max(m,x.cycleKm),0),
+    thresholdCount4w: thresholdSessions.filter(x => (today()-x.date)/(86400000) <= 28).length,
+    recentKeyPct: last4.filter(w=>w.keyPct!=null).length ? last4.filter(w=>w.keyPct!=null).reduce((a,b)=>a+b.keyPct,0)/last4.filter(w=>w.keyPct!=null).length : null,
+    recentFatigue: last4.filter(w=>w.avgFatigue!=null).length ? last4.filter(w=>w.avgFatigue!=null).reduce((a,b)=>a+b.avgFatigue,0)/last4.filter(w=>w.avgFatigue!=null).length : null
+  };
+}
+
+function nextRace() {
+  const now = today();
+  return RACES.find(r => startOfDay(r.date) >= now) || RACES[RACES.length-1];
+}
+
+function raceReadiness(name, ws, qm) {
+  if (name.indexOf('10k') >= 0) {
+    const w = ws[7] || {}; // race week 8
+    const prep = ws.slice(0,8);
+    const hit = prep.filter(x=>x.keyPct!=null).length ? prep.filter(x=>x.keyPct!=null).reduce((a,b)=>a+b.keyPct,0)/prep.filter(x=>x.keyPct!=null).length : 0;
+    const run = Math.max(...prep.map(x=>x.runKm||0),0);
+    return {score: Math.round((hit*6 + Math.min(run/14,1)*4)*10)/10, driver:'Key-session adherence + long-run support'};
+  }
+  if (name.indexOf('Ring') >= 0) {
+    const prep = ws.slice(8,15);
+    const ride = Math.max(...prep.map(x=>x.cycleKm||0),0);
+    const readiness = prep.filter(x=>x.readiness!=null).length ? prep.filter(x=>x.readiness!=null).reduce((a,b)=>a+b.readiness,0)/prep.filter(x=>x.readiness!=null).length : 0;
+    return {score: Math.round((Math.min(ride/150,1)*6 + Math.min(readiness/7,1)*4)*10)/10, driver:'Longest ride + freshness'};
+  }
+  const prep = ws.slice(15,24);
+  const hit = prep.filter(x=>x.keyPct!=null).length ? prep.filter(x=>x.keyPct!=null).reduce((a,b)=>a+b.keyPct,0)/prep.filter(x=>x.keyPct!=null).length : 0;
+  const run = Math.max(...prep.map(x=>x.runKm||0),0);
+  return {score: Math.round((hit*6 + Math.min(run/18,1)*4)*10)/10, driver:'HM-specific key work + long-run durability'};
+}
+
+function insightBlocks(ws) {
+  const cw = curWeek();
+  const cur = ws[cw-1] || {};
+  const prev = ws[cw-2] || {};
+  const out = [];
+  if (cur.ac && cur.chronic && cur.ac/cur.chronic > 1.3) out.push({c:'red',i:'🔴',t:'Load spike risk',b:'This week is more than 1.3x the rolling 4-week average. Protect sleep and trim non-essential work.'});
+  if (cur.monotony && cur.monotony > 2) out.push({c:'amber',i:'🟠',t:'Monotony is high',b:'Training variety is too narrow. Keep hard days hard and easy days genuinely easy.'});
+  if (cur.avgFatigue != null && cur.avgFatigue >= 4) out.push({c:'red',i:'🔴',t:'Fatigue is elevated',b:'Average fatigue is high. Freshness now matters more than extra volume.'});
+  if (cur.keyPct != null && cur.keyPct >= 0.85) out.push({c:'green',i:'🟢',t:'Key sessions are landing',b:'Your adherence to the most important work is strong. Keep prioritising the key sessions.'});
+  if (cur.keyPct != null && cur.keyPct < 0.65) out.push({c:'amber',i:'🟡',t:'Priority sessions are slipping',b:'Missed easy sessions matter less. Missed threshold, long-run, or race-pace sessions matter more.'});
+  const nr = nextRace();
+  if (daysUntil(nr.date) <= 14) out.push({c:'blue',i:'🔵',t:nr.name + ' in ' + daysUntil(nr.date) + ' days',b:'You gain nothing now from proving fitness. Freshness and execution are the focus.'});
+  if (!out.length) out.push({c:'green',i:'✅',t:'System stable',b:'No major red flags. Stay consistent and keep easy days under control.'});
+  return out;
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast on';
+  setTimeout(() => el.className = 'toast', 2200);
+}
 function setSyncBadge(state) {
-  var el = document.getElementById('sync');
+  const el = document.getElementById('sync');
   el.style.display = 'block';
   if (state === 'err') {
     el.className = 'sync err';
     el.textContent = 'Connection error';
   } else if (LAST_TIME) {
     el.className = 'sync';
-    var m = Math.floor((Date.now() - LAST_TIME) / 60000);
+    const m = Math.floor((Date.now()-LAST_TIME)/60000);
     el.textContent = m < 1 ? 'Synced just now' : 'Synced ' + m + 'm ago';
   }
 }
-
 function killCharts() {
-  var keys = Object.keys(CHARTS);
-  for (var i = 0; i < keys.length; i++) {
-    try { CHARTS[keys[i]].destroy(); } catch(e){}
-  }
+  Object.keys(CHARTS).forEach(k => { try { CHARTS[k].destroy(); } catch(e) {} });
   CHARTS = {};
 }
-
-function mkChart(id, type, labels, datasets, opts) {
-  var ctx = document.getElementById(id);
+function mkChart(id, type, labels, datasets, yMax) {
+  const ctx = document.getElementById(id);
   if (!ctx) return;
-  var base = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { color:'rgba(255,255,255,.04)' }, ticks: { color:'#8891a8', font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:13 } },
-      y: { grid: { color:'rgba(255,255,255,.04)' }, ticks: { color:'#8891a8', font:{size:11} }, beginAtZero:true }
+  CHARTS[id] = new Chart(ctx, {
+    type,
+    data: { labels, datasets },
+    options: {
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ grid:{ color:'rgba(255,255,255,.04)' }, ticks:{ color:'#95a0b8', font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:12 } },
+        y:{ grid:{ color:'rgba(255,255,255,.04)' }, ticks:{ color:'#95a0b8', font:{size:10} }, beginAtZero:true, max:yMax||undefined }
+      }
     }
-  };
-  if (opts) {
-    if (opts.maxY) base.scales.y.max = opts.maxY;
-  }
-  CHARTS[id] = new Chart(ctx, { type:type, data:{labels:labels, datasets:datasets}, options:base });
+  });
 }
 
-// ── FETCH ──────────────────────────────────────────────────────────────────
 function fetchData(force, cb) {
   if (!APIURL) { cb([]); return; }
-  if (!force && DATA.length && (Date.now() - LAST_FETCH) < 120000) { cb(DATA); return; }
-
-  var url = APIURL + (APIURL.indexOf('?') >= 0 ? '&' : '?') + 'action=getData&t=' + Date.now();
-  var xhr = new XMLHttpRequest();
+  if (!force && DATA.length && (Date.now()-LAST_FETCH) < 120000) { cb(DATA); return; }
+  const url = APIURL + (APIURL.indexOf('?') >= 0 ? '&' : '?') + 'action=getData&t=' + Date.now();
+  const xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);
   xhr.timeout = 12000;
   xhr.onload = function() {
     if (xhr.status === 200) {
       try {
-        var json = JSON.parse(xhr.responseText);
+        const json = JSON.parse(xhr.responseText);
         if (json.status === 'ok') {
-          DATA = json.data;
+          DATA = json.data || [];
           LAST_FETCH = Date.now();
           LAST_TIME = Date.now();
           FETCH_ERR = false;
           setSyncBadge('ok');
-          cb(DATA);
-          return;
+          cb(DATA); return;
         }
-        throw new Error(json.error || 'Bad response');
-      } catch(e) {
-        FETCH_ERR = true;
-        setSyncBadge('err');
-        cb(DATA);
-      }
-    } else {
-      FETCH_ERR = true;
-      setSyncBadge('err');
-      cb(DATA);
+      } catch(e) {}
     }
+    FETCH_ERR = true; setSyncBadge('err'); cb(DATA);
   };
-  xhr.onerror = xhr.ontimeout = function() {
-    FETCH_ERR = true;
-    setSyncBadge('err');
-    cb(DATA);
-  };
+  xhr.onerror = xhr.ontimeout = function() { FETCH_ERR = true; setSyncBadge('err'); cb(DATA); };
   xhr.send();
 }
 
-// ── NAV ────────────────────────────────────────────────────────────────────
 function go(tab) {
   TAB = tab;
-  var tabs = ['overview','history','load','plan','races','setup'];
-  for (var i = 0; i < tabs.length; i++) {
-    var el = document.getElementById('nl-' + tabs[i]);
-    if (el) el.className = 'nl' + (tabs[i] === tab ? ' on' : '');
-  }
+  ['overview','load','quality','history','plan','races','setup'].forEach(t => {
+    const el = document.getElementById('nl-'+t); if (el) el.className = 'nl' + (t===tab ? ' on' : '');
+  });
   render();
 }
+
+function setupPage() {
+  return `
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px">Setup</div>
+    <div style="font-size:13px;color:var(--mu);margin-bottom:18px">Connect your Google Apps Script web app so the dashboard can read the master session sheet.</div>
+    <div class="card">
+      <div class="ct">Apps Script URL</div>
+      <div style="font-size:13px;color:var(--mu);margin-bottom:8px">Paste the deployed web app URL that returns your session data as JSON.</div>
+      <input id="api-url" class="url-inp" placeholder="https://script.google.com/macros/s/..." value="${APIURL}">
+      <button class="btn-pri" onclick="saveApi()">Save connection</button>
+      <button class="btn" style="margin-top:10px;width:100%" onclick="testApi()">Test connection</button>
+    </div>
+    <div class="card">
+      <div class="ct">Recommended source columns</div>
+      <div style="font-size:13px;color:var(--mu);line-height:1.6">
+        Best results come when the source includes: Date, Week, Planned Session, Discipline, Session Subtype, Key Session?, Completed?, Run Distance, Cycle Distance, Duration, RPE, sRPE Load, Fatigue, and Sleep.
+      </div>
+    </div>`;
+}
+function saveApi() {
+  APIURL = document.getElementById('api-url').value.trim();
+  localStorage.setItem(SKEY, APIURL);
+  toast('Connection saved');
+  render();
+}
+function testApi() { fetchData(true, () => toast(FETCH_ERR ? 'Connection failed' : 'Connection working')); }
 
 function render() {
   killCharts();
-  var body = document.getElementById('body');
-
-  if (!APIURL) {
+  const body = document.getElementById('body');
+  if (!APIURL && TAB !== 'setup') {
     document.getElementById('hdr-sub').textContent = 'Setup required';
-    body.innerHTML = setupPage(true);
+    body.innerHTML = setupPage();
     return;
   }
-
-  if (TAB === 'setup') { body.innerHTML = setupPage(false); return; }
-  if (TAB === 'plan')  { body.innerHTML = planPage(curWeek()); scrollToCurWeek(); return; }
-  if (TAB === 'races') { body.innerHTML = racesPage(); return; }
-
-  body.innerHTML = '<div class="ld-state"><div class="spin"></div><span>Fetching from Google Sheets...</span></div>';
-
+  if (TAB === 'setup') {
+    body.innerHTML = setupPage();
+    return;
+  }
+  body.innerHTML = '<div class="ld-state"><div class="spin"></div><span>Loading performance data...</span></div>';
   fetchData(false, function(data) {
     if (FETCH_ERR && !data.length) {
-      body.innerHTML = errPage();
+      body.innerHTML = '<div class="err-state"><div style="font-size:38px">⚠️</div><div style="font-weight:700;color:var(--tx)">Could not load session data</div><div>Check the Apps Script deployment URL in Setup.</div></div>';
       return;
     }
-    var cw = curWeek();
-    document.getElementById('hdr-sub').textContent = 'Paul Carroll - Week ' + cw + ' of 25';
-    if (TAB === 'overview') overviewPage(data, cw);
-    else if (TAB === 'history') historyPage(data);
-    else if (TAB === 'load') loadPage(data, cw);
+    const ws = weeklyStats(data);
+    const qm = qualityMetrics(data, ws);
+    const hist = historyRows(data);
+    const cw = curWeek();
+    const cur = ws[cw-1];
+    document.getElementById('hdr-sub').textContent = 'Paul Carroll · Week ' + cw + ' · ' + cur.phase;
+    if (TAB === 'overview') overviewPage(data, ws, qm, hist);
+    else if (TAB === 'load') loadPage(ws);
+    else if (TAB === 'quality') qualityPage(qm, ws, hist);
+    else if (TAB === 'history') historyPage(hist);
+    else if (TAB === 'plan') planPage(cw);
+    else if (TAB === 'races') racesPage(ws, qm);
   });
 }
 
-function errPage() {
-  return '<div class="err-state">' +
-    '<div style="font-size:40px">&#9888;&#65039;</div>' +
-    '<div class="err-title">Could not load data</div>' +
-    '<div class="err-sub">The API returned an error or timed out.<br><br>' +
-    '<strong>Check:</strong><br>' +
-    '1. Apps Script deployed as Web App<br>' +
-    '2. Who has access = <strong>Anyone</strong><br>' +
-    '3. URL in Setup starts with https://script.google.com<br>' +
-    '4. Try opening the URL directly in your browser</div>' +
-    '<button class="btn-act" onclick="go(\'setup\')">Go to Setup</button>' +
-    '<button class="btn-ref" style="margin-top:8px" onclick="refreshData()">&#8635; Try again</button>' +
-    '</div>';
-}
+function overviewPage(data, ws, qm, hist) {
+  const cw = curWeek();
+  const cur = ws[cw-1];
+  const nr = nextRace();
+  const insights = insightBlocks(ws);
+  const body = document.getElementById('body');
+  body.innerHTML = `
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px">Command center</div>
+    <div style="font-size:13px;color:var(--mu);margin-bottom:18px">${new Date().toLocaleDateString('en-IE', {weekday:'long', day:'numeric', month:'short', year:'numeric'})}</div>
 
-function refreshData() {
-  DATA = [];
-  LAST_FETCH = 0;
-  FETCH_ERR = false;
-  toast('Refreshing...');
-  render();
-}
+    <div class="banner">
+      <b>Today’s coaching directive</b>
+      Prioritise the key session, protect recovery, and refuse to let easy sessions drift into moderate effort.
+    </div>
 
-// ── INSIGHTS ───────────────────────────────────────────────────────────────
-function insights(ws, cw) {
-  var out = [];
-  var cwd = ws[cw-1];
-  var pwd = ws[cw-2];
+    <div class="g3">
+      <div class="kpi"><div class="l">Current week</div><div class="v">${cw}</div><div class="s">${cur.phase}</div></div>
+      <div class="kpi"><div class="l">Next race</div><div class="v" style="font-size:18px">${daysUntil(nr.date)}d</div><div class="s">${nr.name}</div></div>
+      <div class="kpi"><div class="l">Readiness</div><div class="v">${cur.readiness != null ? cur.readiness.toFixed(1) : '-'}</div><div class="s">out of 10</div></div>
+      <div class="kpi"><div class="l">This week load</div><div class="v">${Math.round(cur.totalLoad)}</div><div class="s">combined load</div></div>
+      <div class="kpi"><div class="l">Key sessions hit</div><div class="v">${cur.keyPct != null ? Math.round(cur.keyPct*100) + '%' : '-'}</div><div class="s">${cur.keyHit} / ${cur.keyPlanned}</div></div>
+      <div class="kpi"><div class="l">Longest run</div><div class="v">${qm.bestLongRun || '-'}</div><div class="s">km completed</div></div>
+    </div>
 
-  if (cwd && pwd && cwd.load > 0 && pwd.load > 0) {
-    var spike = ((cwd.load - pwd.load) / pwd.load) * 100;
-    if (spike > 15) {
-      out.push({c:'red', icon:'&#128308;', title:'Load spike this week (+' + Math.round(spike) + '%)', body:'Training load jumped more than 15% from last week. Consider an extra rest day or reduce intensity tomorrow.'});
+    <div class="card"><div class="ct">Coaching insights</div>${insights.map(x => `<div class="ins ins-${x.c}"><div class="ic">${x.i}</div><div><div class="tt">${x.t}</div><div>${x.b}</div></div></div>`).join('')}</div>
+
+    <div class="card"><div class="ct">Hybrid load by week</div><div class="cw" style="height:190px"><canvas id="ov1"></canvas></div></div>
+    <div class="card"><div class="ct">Key-session adherence + readiness</div><div class="cw" style="height:190px"><canvas id="ov2"></canvas></div></div>
+  `;
+  const labels = ws.map(w => 'W' + w.week);
+  mkChart('ov1','bar',labels,ws.map(w => ({label:'',data:[]})),null);
+  CHARTS['ov1'].destroy();
+  CHARTS['ov1'] = new Chart(document.getElementById('ov1'), {
+    type:'bar',
+    data: {
+      labels,
+      datasets:[
+        {data:ws.map(w => w.runLoad || null), backgroundColor:'#22c55e', borderRadius:3},
+        {data:ws.map(w => w.bikeLoad || null), backgroundColor:'#f97316', borderRadius:3},
+        {data:ws.map(w => w.strengthLoad || null), backgroundColor:'#a78bfa', borderRadius:3}
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{stacked:true, grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#95a0b8', font:{size:9}}}, y:{stacked:true, grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#95a0b8', font:{size:10}}, beginAtZero:true}}
     }
-  }
-
-  if (cwd && cwd.avgFat !== null && cwd.avgFat >= 4) {
-    out.push({c:'red', icon:'&#128308;', title:'High fatigue (avg ' + cwd.avgFat + '/5)', body:'Average fatigue above 3.5 — your body is asking for recovery. Prioritise sleep and keep easy days easy.'});
-  } else if (cwd && cwd.avgFat !== null && cwd.avgFat >= 3) {
-    out.push({c:'amber', icon:'&#128992;', title:'Moderate fatigue building (' + cwd.avgFat + '/5)', body:'Fatigue is creeping up. Monitor closely and protect sleep and easy days this week.'});
-  }
-
-  var recent = [];
-  for (var i = Math.max(0, cw-4); i < cw; i++) { if (ws[i] && ws[i].total > 0) recent.push(ws[i]); }
-  if (recent.length) {
-    var avgPct = Math.round(recent.reduce(function(a,w){return a+w.pct;},0) / recent.length);
-    if (avgPct >= 85) out.push({c:'green', icon:'&#128994;', title:'Strong consistency (' + avgPct + '% over last ' + recent.length + ' weeks)', body:'Excellent adherence to the plan. Consistent training is your biggest asset heading into race prep.'});
-    else if (avgPct < 60 && recent.length >= 2) out.push({c:'amber', icon:'&#128993;', title:'Consistency needs attention (' + avgPct + '% recently)', body:'Completion rate has dipped. Focus on the key sessions — intervals and long run — even if you miss others.'});
-  }
-
-  if (cw >= 23 && cw <= 25) out.push({c:'blue', icon:'&#128309;', title:'Taper phase — trust the process', body:'Volume drops now are intentional. Resist adding extra sessions. Your fitness is banked, the goal is freshness.'});
-
-  var r1d = daysUntil(R1), r2d = daysUntil(R2), r3d = daysUntil(R3);
-  if (r1d > 0 && r1d <= 14) out.push({c:'blue', icon:'&#127937;', title:'Killarney 10k in ' + r1d + ' days', body:'Race week: keep volume low, one short sharpener midweek, full rest the day before.'});
-  if (r2d > 0 && r2d <= 14) out.push({c:'blue', icon:'&#128690;', title:'Ring of Kerry in ' + r2d + ' days', body:'Legs should feel springy. Short easy spin midweek, no hard efforts.'});
-  if (r3d > 0 && r3d <= 14) out.push({c:'blue', icon:'&#127941;', title:'Dingle Half Marathon in ' + r3d + ' days', body:'Trust your training. Short sharpener Tuesday, easy shakeout Friday, race Saturday.'});
-
-  if (!out.length) out.push({c:'green', icon:'&#9989;', title:'All systems good', body:'No alerts this week. Stay consistent, keep easy days easy, and trust the plan.'});
-  return out;
-}
-
-function insHtml(ins) {
-  var html = '';
-  for (var i = 0; i < ins.length; i++) {
-    var x = ins[i];
-    html += '<div class="ins ins-' + x.c + '"><div class="ii">' + x.icon + '</div><div class="it"><div class="itl">' + x.title + '</div>' + x.body + '</div></div>';
-  }
-  return html;
-}
-
-// ── HEATMAP ────────────────────────────────────────────────────────────────
-function heatmap(data) {
-  var byDate = {};
-  for (var i = 0; i < data.length; i++) {
-    var r = data[i];
-    var d = String(r['Date']).split('T')[0].split(' ')[0];
-    byDate[d] = { done: isDone(r), type: String(r['Session Type'] || '').toLowerCase(), plan: r['Planned Session'] || '' };
-  }
-
-  var start = new Date('2026-03-16');
-  var end = new Date('2026-09-06');
-  var today = new Date(); today.setHours(0,0,0,0);
-  var days = [];
-  var d = new Date(start);
-  while (d <= end) { days.push(new Date(d)); d.setDate(d.getDate()+1); }
-
-  var firstDay = days[0].getDay();
-  var pad = firstDay === 0 ? 6 : firstDay - 1;
-  var totalCols = Math.ceil((pad + days.length) / 7);
-
-  function cellColor(date, info) {
-    if (date > today) return 'rgba(255,255,255,0.05)';
-    if (!info) return 'rgba(255,255,255,0.05)';
-    if (!info.done) return 'rgba(232,69,69,0.35)';
-    var t = info.type;
-    if (t.indexOf('run') >= 0 || t.indexOf('tempo') >= 0 || t.indexOf('interval') >= 0) return '#1bc4a0';
-    if (t.indexOf('cycle') >= 0 || t.indexOf('ride') >= 0 || t.indexOf('spin') >= 0) return '#f07830';
-    if (t.indexOf('strength') >= 0) return '#9b7dea';
-    return '#4a90d9';
-  }
-
-  var cells = '';
-  for (var i = 0; i < pad; i++) cells += '<div class="hmc" style="background:transparent"></div>';
-  for (var i = 0; i < days.length; i++) {
-    var key = days[i].toISOString().split('T')[0];
-    var info = byDate[key];
-    var color = cellColor(days[i], info);
-    var tip = days[i].toLocaleDateString('en-IE', {day:'numeric',month:'short'});
-    if (info) tip += ' - ' + info.plan + (info.done ? ' (done)' : ' (missed)');
-    cells += '<div class="hmc" style="background:' + color + '"><span class="hmt">' + tip + '</span></div>';
-  }
-
-  var monthLabels = '';
-  var colW = 13 + 3;
-  var lastM = -1;
-  var col = pad;
-  for (var i = 0; i < days.length; i++) {
-    var m = days[i].getMonth();
-    if (m !== lastM) {
-      var colPos = Math.floor(col / 7) * colW;
-      monthLabels += '<span style="position:absolute;left:' + colPos + 'px;font-size:9px;color:var(--mu)">' + days[i].toLocaleDateString('en-IE',{month:'short'}) + '</span>';
-      lastM = m;
-    }
-    col++;
-  }
-
-  var gridCols = 'repeat(' + totalCols + ',13px)';
-  return '<div class="hmw">' +
-    '<div style="position:relative;height:14px;width:' + (totalCols*16) + 'px;margin-bottom:2px">' + monthLabels + '</div>' +
-    '<div class="hmg" style="grid-template-columns:' + gridCols + ';grid-template-rows:repeat(7,13px)">' + cells + '</div>' +
-    '<div class="hml">' +
-    '<div class="hmc" style="background:#1bc4a0;border-radius:2px;display:inline-block"></div> Run &nbsp;' +
-    '<div class="hmc" style="background:#f07830;border-radius:2px;display:inline-block"></div> Cycle &nbsp;' +
-    '<div class="hmc" style="background:#9b7dea;border-radius:2px;display:inline-block"></div> Strength &nbsp;' +
-    '<div class="hmc" style="background:rgba(232,69,69,.35);border-radius:2px;display:inline-block"></div> Missed &nbsp;' +
-    '<div class="hmc" style="background:rgba(255,255,255,.05);border-radius:2px;display:inline-block"></div> Upcoming' +
-    '</div></div>';
-}
-
-// ── OVERVIEW ───────────────────────────────────────────────────────────────
-function overviewPage(data, cw) {
-  var ws = wStats(data);
-  var done = data.filter(isDone);
-  var totR = done.reduce(function(a,r){return a+(pn(r['Run Distance (km)'])||0);},0);
-  var totC = done.reduce(function(a,r){return a+(pn(r['Cycle Distance (km)'])||0);},0);
-  var totM = done.reduce(function(a,r){return a+(pn(r['Duration (min)'])||0);},0);
-  var phase = PLAN[cw-1] ? PLAN[cw-1][9] : 'Complete';
-  var pct = Math.round((cw/25)*100);
-  var ins = insights(ws, cw);
-  var labels = ws.map(function(w){return 'W'+w.week;});
-
-  document.getElementById('body').innerHTML =
-    '<div style="font-size:20px;font-weight:600;margin-bottom:4px">Overview</div>' +
-    '<div style="font-size:13px;color:var(--mu);margin-bottom:20px">' + new Date().toLocaleDateString('en-IE',{weekday:'long',day:'numeric',month:'short',year:'numeric'}) + '</div>' +
-
-    '<div class="g3">' +
-      raceCard('Killarney 10k','9 May','var(--te)',daysUntil(R1),'10km') +
-      raceCard('Ring of Kerry','4 Jul','var(--or)',daysUntil(R2),'170km') +
-      raceCard('Dingle HM','5 Sep','var(--pu)',daysUntil(R3),'21.1km') +
-    '</div>' +
-
-    '<div class="card">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">' +
-        '<span class="ct" style="margin:0">Phase</span>' +
-        '<span style="font-size:12px;font-weight:600;color:var(--te)">W' + cw + ' - ' + phase + '</span>' +
-      '</div>' +
-      '<div class="pbt"><div class="pbf" style="width:' + pct + '%"></div></div>' +
-      '<div class="pbl"><span>W1</span><span>10k W8</span><span>RoK W15</span><span>HM W24</span></div>' +
-    '</div>' +
-
-    '<div class="card"><div class="ct">Coaching insights</div>' + insHtml(ins) + '</div>' +
-
-    '<div class="g2">' +
-      '<div class="sc"><div class="sl">Run km</div><div class="sv" style="color:var(--te)">' + totR.toFixed(1) + '</div><div class="ss">total logged</div></div>' +
-      '<div class="sc"><div class="sl">Cycle km</div><div class="sv" style="color:var(--or)">' + totC.toFixed(1) + '</div><div class="ss">total logged</div></div>' +
-      '<div class="sc"><div class="sl">Hours</div><div class="sv" style="color:var(--bl)">' + (totM/60).toFixed(1) + '</div><div class="ss">training time</div></div>' +
-      '<div class="sc"><div class="sl">Sessions</div><div class="sv" style="color:var(--gr)">' + done.length + '</div><div class="ss">completed</div></div>' +
-    '</div>' +
-
-    '<div class="card"><div class="ct">Session completion heatmap</div>' + heatmap(data) + '</div>' +
-
-    '<div class="card"><div class="ct">Cumulative run km</div><div class="cw" style="height:170px"><canvas id="cc1"></canvas></div></div>' +
-    '<div class="card"><div class="ct">Weekly run km - actual vs planned</div><div class="cw" style="height:170px"><canvas id="cc2"></canvas></div>' +
-      '<div class="leg"><div class="li"><div class="ld" style="background:var(--te)"></div>Actual</div><div class="li"><div class="ld" style="background:rgba(255,255,255,.2)"></div>Planned</div></div></div>' +
-    '<div class="card" style="margin-bottom:0"><div class="ct">RPE and fatigue trend</div><div class="cw" style="height:170px"><canvas id="cc3"></canvas></div>' +
-      '<div class="leg"><div class="li"><div class="ld" style="background:var(--bl)"></div>Avg RPE /10</div><div class="li"><div class="ld" style="background:var(--re)"></div>Avg fatigue /5</div></div></div>';
-
-  var cum = 0;
-  var cumData = ws.map(function(w){ cum += w.run; return cum > 0 ? Math.round(cum*10)/10 : null; });
-  mkChart('cc1','line',labels,[{label:'Cum run km',data:cumData,borderColor:'#1bc4a0',backgroundColor:'rgba(27,196,160,.1)',tension:.3,pointRadius:2,fill:true}]);
-  mkChart('cc2','bar',labels,[
-    {label:'Planned',data:ws.map(function(w){return w.plan;}),backgroundColor:'rgba(255,255,255,.07)',borderRadius:2,order:2},
-    {label:'Actual',data:ws.map(function(w){return w.run||null;}),backgroundColor:'#1bc4a0',borderRadius:2,order:1}
-  ]);
-  mkChart('cc3','line',labels,[
-    {label:'Avg RPE',data:ws.map(function(w){return w.avgRpe;}),borderColor:'#4a90d9',tension:.3,pointRadius:3,pointBackgroundColor:'#4a90d9',fill:false},
-    {label:'Avg fatigue',data:ws.map(function(w){return w.avgFat;}),borderColor:'#e84545',tension:.3,pointRadius:3,pointBackgroundColor:'#e84545',fill:false}
-  ], {maxY:10});
-}
-
-function raceCard(name, date, color, days, dist) {
-  return '<div class="rc" style="border-top:3px solid ' + color + '">' +
-    '<div class="rn">' + name + '</div>' +
-    '<div class="rd">' + date + '</div>' +
-    '<div class="ry" style="color:' + color + '">' + days + '</div>' +
-    '<div class="rt">days</div>' +
-    '<div class="rb" style="color:' + color + '">' + dist + '</div>' +
-  '</div>';
-}
-
-// ── HISTORY ────────────────────────────────────────────────────────────────
-function historyPage(data) {
-  var done = data.filter(isDone).reverse();
-  var html = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">' +
-    '<div style="font-size:20px;font-weight:600">Session History</div>' +
-    '<button class="btn-ref" onclick="refreshData()">&#8635; Refresh</button></div>' +
-    '<div style="font-size:13px;color:var(--mu);margin-bottom:20px">' + done.length + ' completed sessions</div>';
-
-  if (!done.length) {
-    html += '<div class="empty"><div style="font-size:40px;opacity:.4;margin-bottom:12px">&#128203;</div>' +
-      '<div style="font-size:15px;font-weight:600;color:var(--tx);margin-bottom:6px">No completed sessions yet</div>' +
-      '<div>Mark sessions as Yes in the Completed? column of your Google Sheet</div></div>';
-  } else {
-    for (var i = 0; i < done.length; i++) {
-      var r = done[i];
-      var t = String(r['Session Type'] || '').toLowerCase();
-      var kind = t.indexOf('run') >= 0 || t.indexOf('tempo') >= 0 || t.indexOf('interval') >= 0 ? 'run'
-        : t.indexOf('cycle') >= 0 || t.indexOf('ride') >= 0 || t.indexOf('spin') >= 0 ? 'cycle'
-        : t.indexOf('strength') >= 0 ? 'strength' : 'rest';
-      var bcolors = {run:['#1bc4a0','rgba(27,196,160,.15)'],cycle:['#f07830','rgba(240,120,48,.15)'],strength:['#9b7dea','rgba(155,125,234,.15)'],rest:['#8891a8','rgba(136,145,168,.15)']};
-      var bc = bcolors[kind];
-      var runKm = pn(r['Run Distance (km)']) || 0;
-      var cycKm = pn(r['Cycle Distance (km)']) || 0;
-
-      html += '<div class="scard">' +
-        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">' +
-          '<span class="badge" style="background:' + bc[1] + ';color:' + bc[0] + '">' + (r['Session Type'] || 'session') + '</span>' +
-          '<span style="font-size:12px;color:var(--mu)">W' + r['Week'] + '</span>' +
-        '</div>' +
-        '<div style="font-size:13px;font-weight:600;margin-bottom:8px">' + r['Date'] + ' - ' + (r['Actual Description'] || r['Planned Session'] || '') + '</div>' +
-        '<div class="smg">' +
-          '<div class="smc"><div class="sml">Run</div><div class="smv" style="color:var(--te)">' + (runKm > 0 ? runKm + 'km' : '-') + '</div></div>' +
-          '<div class="smc"><div class="sml">Cycle</div><div class="smv" style="color:var(--or)">' + (cycKm > 0 ? cycKm + 'km' : '-') + '</div></div>' +
-          '<div class="smc"><div class="sml">RPE</div><div class="smv" style="color:var(--bl)">' + (r['RPE'] || '-') + '</div></div>' +
-          '<div class="smc"><div class="sml">Fatigue</div><div class="smv" style="color:var(--re)">' + (r['Fatigue (1-5)'] || '-') + '</div></div>' +
-        '</div>' +
-        (r['Notes'] ? '<div class="snt">' + r['Notes'] + '</div>' : '') +
-      '</div>';
-    }
-  }
-  document.getElementById('body').innerHTML = html;
-}
-
-// ── LOAD ───────────────────────────────────────────────────────────────────
-function loadPage(data, cw) {
-  var ws = wStats(data);
-  var curLoad = ws[cw-1] ? ws[cw-1].load : 0;
-  var allLoads = ws.filter(function(w){return w.load>0;}).map(function(w){return w.load;});
-  var avgLoad = allLoads.length ? Math.round(allLoads.reduce(function(a,b){return a+b;},0)/allLoads.length) : 0;
-  var allFats = data.filter(isDone).map(function(r){return pn(r['Fatigue (1-5)']);}).filter(function(v){return v!==null&&v>0;});
-  var avgFat = allFats.length ? (allFats.reduce(function(a,b){return a+b;},0)/allFats.length).toFixed(1) : '-';
-  var labels = ws.map(function(w){return 'W'+w.week;});
-
-  var loadColors = ws.map(function(w,i){
-    if (!w.load) return 'rgba(255,255,255,.04)';
-    var prev = i > 0 ? ws[i-1].load : 0;
-    return prev > 0 && w.load > prev * 1.15 ? '#e84545' : '#4a90d9';
   });
-
-  var cum = 0;
-  var cumData = ws.map(function(w){ cum += w.run; return cum > 0 ? Math.round(cum*10)/10 : null; });
-
-  document.getElementById('body').innerHTML =
-    '<div style="font-size:20px;font-weight:600;margin-bottom:4px">Training Load</div>' +
-    '<div style="font-size:13px;color:var(--mu);margin-bottom:20px">Load = sum of (duration x RPE) per session. Red = &gt;15% jump.</div>' +
-    '<div class="g3">' +
-      '<div class="sc"><div class="sl">This week</div><div class="sv" style="color:var(--am)">' + (curLoad || '-') + '</div><div class="ss">load score</div></div>' +
-      '<div class="sc"><div class="sl">Avg load</div><div class="sv" style="color:var(--bl)">' + (avgLoad || '-') + '</div><div class="ss">per week</div></div>' +
-      '<div class="sc"><div class="sl">Avg fatigue</div><div class="sv" style="color:var(--re)">' + avgFat + '</div><div class="ss">target below 3.5</div></div>' +
-    '</div>' +
-    '<div class="card"><div class="ct">Session load by week</div><div class="cw" style="height:200px"><canvas id="lc1"></canvas></div></div>' +
-    '<div class="card"><div class="ct">Cumulative run km</div><div class="cw" style="height:180px"><canvas id="lc2"></canvas></div></div>' +
-    '<div class="card" style="margin-bottom:0"><div class="ct">Run and cycle km by week</div><div class="cw" style="height:180px"><canvas id="lc3"></canvas></div>' +
-      '<div class="leg"><div class="li"><div class="ld" style="background:var(--te)"></div>Run</div><div class="li"><div class="ld" style="background:var(--or)"></div>Cycle</div></div></div>';
-
-  var loadDs = [{
-    label:'Load',
-    data: ws.map(function(w){return w.load||null;}),
-    backgroundColor: loadColors,
-    borderRadius: 3
-  }];
-  loadDs[0].backgroundColor = loadColors;
-  mkChart('lc1','bar',labels,loadDs);
-  mkChart('lc2','line',labels,[{label:'Cumulative run',data:cumData,borderColor:'#1bc4a0',backgroundColor:'rgba(27,196,160,.1)',tension:.3,pointRadius:2,fill:true}]);
-  mkChart('lc3','bar',labels,[
-    {label:'Run',data:ws.map(function(w){return w.run||null;}),backgroundColor:'#1bc4a0',borderRadius:3},
-    {label:'Cycle',data:ws.map(function(w){return w.cycle||null;}),backgroundColor:'#f07830',borderRadius:3}
-  ]);
+  mkChart('ov2','line',labels,[
+    {data:ws.map(w => w.keyPct != null ? Math.round(w.keyPct*100) : null), borderColor:'#60a5fa', backgroundColor:'rgba(96,165,250,.1)', tension:.3, pointRadius:3, fill:false},
+    {data:ws.map(w => w.readiness), borderColor:'#ef4444', backgroundColor:'rgba(239,68,68,.08)', tension:.3, pointRadius:3, fill:false}
+  ], 100);
 }
 
-// ── PLAN ───────────────────────────────────────────────────────────────────
+function loadPage(ws) {
+  const cw = curWeek();
+  const cur = ws[cw-1];
+  const body = document.getElementById('body');
+  body.innerHTML = `
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px">Load management</div>
+    <div style="font-size:13px;color:var(--mu);margin-bottom:18px">Weekly load is split by run, bike, and strength to make hybrid interference visible.</div>
+    <div class="g3">
+      <div class="kpi"><div class="l">Acute load</div><div class="v">${Math.round(cur.acute || 0)}</div><div class="s">current week</div></div>
+      <div class="kpi"><div class="l">Chronic load</div><div class="v">${cur.chronic != null ? Math.round(cur.chronic) : '-'}</div><div class="s">rolling 4-week avg</div></div>
+      <div class="kpi"><div class="l">A:C ratio</div><div class="v">${cur.ac != null ? cur.ac.toFixed(2) : '-'}</div><div class="s">target ~0.8–1.3</div></div>
+      <div class="kpi"><div class="l">Monotony</div><div class="v">${cur.monotony != null ? cur.monotony.toFixed(2) : '-'}</div><div class="s">lower is usually better</div></div>
+      <div class="kpi"><div class="l">Strain</div><div class="v">${cur.strain != null ? Math.round(cur.strain) : '-'}</div><div class="s">load × monotony</div></div>
+      <div class="kpi"><div class="l">Avg fatigue</div><div class="v">${cur.avgFatigue != null ? cur.avgFatigue.toFixed(1) : '-'}</div><div class="s">1–5 scale</div></div>
+    </div>
+    <div class="card"><div class="ct">Total load trend</div><div class="cw" style="height:190px"><canvas id="ld1"></canvas></div></div>
+    <div class="card"><div class="ct">A:C ratio trend</div><div class="cw" style="height:190px"><canvas id="ld2"></canvas></div></div>
+    <div class="card">
+      <div class="ct">Weekly hybrid load table</div>
+      <table class="table">
+        <thead><tr><th>Week</th><th>Phase</th><th>Total</th><th>Run</th><th>Bike</th><th>Strength</th><th>A:C</th><th>Flag</th></tr></thead>
+        <tbody>
+          ${ws.map(w => `<tr><td>W${w.week}</td><td>${w.phase}</td><td>${Math.round(w.totalLoad)}</td><td>${Math.round(w.runLoad)}</td><td>${Math.round(w.bikeLoad)}</td><td>${Math.round(w.strengthLoad)}</td><td>${w.ac != null ? w.ac.toFixed(2) : '-'}</td><td>${w.ac && w.ac > 1.3 ? 'High A:C' : (w.monotony && w.monotony > 2 ? 'High monotony' : '')}</td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+  const labels = ws.map(w => 'W'+w.week);
+  mkChart('ld1','line',labels,[{data:ws.map(w => Math.round(w.totalLoad)||null), borderColor:'#22d3ee', backgroundColor:'rgba(34,211,238,.1)', tension:.3, pointRadius:3, fill:true}]);
+  mkChart('ld2','line',labels,[{data:ws.map(w => w.ac != null ? Number(w.ac.toFixed(2)) : null), borderColor:'#fbbf24', backgroundColor:'rgba(251,191,36,.08)', tension:.3, pointRadius:3, fill:false}], 2);
+}
+
+function qualityPage(qm, ws, hist) {
+  const body = document.getElementById('body');
+  body.innerHTML = `
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px">Quality + durability</div>
+    <div style="font-size:13px;color:var(--mu);margin-bottom:18px">This view tracks whether the work that matters most is actually landing.</div>
+    <div class="g3">
+      <div class="kpi"><div class="l">Recent key-hit %</div><div class="v">${qm.recentKeyPct != null ? Math.round(qm.recentKeyPct*100)+'%' : '-'}</div><div class="s">last 4 weeks</div></div>
+      <div class="kpi"><div class="l">Longest ride</div><div class="v">${qm.bestLongRide || '-'}</div><div class="s">km completed</div></div>
+      <div class="kpi"><div class="l">Threshold sessions</div><div class="v">${qm.thresholdCount4w}</div><div class="s">last 28 days</div></div>
+      <div class="kpi"><div class="l">Latest long run</div><div class="v">${qm.latestLongRun ? qm.latestLongRun.runKm : '-'}</div><div class="s">${qm.latestLongRun ? fmtShort(qm.latestLongRun.date) : 'not yet logged'}</div></div>
+      <div class="kpi"><div class="l">Latest long ride</div><div class="v">${qm.latestLongRide ? (qm.latestLongRide.cycleKm || qm.latestLongRide.runKm || '-') : '-'}</div><div class="s">${qm.latestLongRide ? fmtShort(qm.latestLongRide.date) : 'not yet logged'}</div></div>
+      <div class="kpi"><div class="l">Recent fatigue</div><div class="v">${qm.recentFatigue != null ? qm.recentFatigue.toFixed(1) : '-'}</div><div class="s">last 4 weeks</div></div>
+    </div>
+
+    <div class="card">
+      <div class="ct">What this means</div>
+      <div class="ins ins-blue"><div class="ic">🔵</div><div><div class="tt">Elite dashboards do not reward box-ticking</div><div>The key question is whether threshold work, long endurance work, and race-specific sessions are happening consistently enough to move performance.</div></div></div>
+    </div>
+
+    <div class="card"><div class="ct">Key-session hit % by week</div><div class="cw" style="height:190px"><canvas id="ql1"></canvas></div></div>
+    <div class="card"><div class="ct">Recent high-value sessions</div>
+      <table class="table">
+        <thead><tr><th>Date</th><th>Session</th><th>Type</th><th>Load</th><th>Notes</th></tr></thead>
+        <tbody>
+          ${hist.filter(x => ['race','long run','long ride','threshold','tempo','intervals'].includes(x.subtype)).slice(0,12).map(x => `<tr><td>${fmtDate(x.date)}</td><td>${x.actual}</td><td>${x.subtype}</td><td>${Math.round((x.dur||0)*(x.rpe||0))}</td><td>${x.notes ? x.notes.slice(0,90)+'…' : ''}</td></tr>`).join('') || '<tr><td colspan="5">No high-value completed sessions yet.</td></tr>'}
+        </tbody>
+      </table>
+    </div>
+  `;
+  const labels = ws.map(w => 'W'+w.week);
+  mkChart('ql1','bar',labels,[{data:ws.map(w => w.keyPct != null ? Math.round(w.keyPct*100) : null), backgroundColor:'#60a5fa', borderRadius:3}],100);
+}
+
+function historyPage(hist) {
+  const body = document.getElementById('body');
+  body.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div style="font-size:20px;font-weight:700">Session history</div>
+      <button class="btn" onclick="fetchData(true, ()=>render())">Refresh</button>
+    </div>
+    <div style="font-size:13px;color:var(--mu);margin-bottom:18px">${hist.length} completed sessions</div>
+    ${hist.length ? hist.slice(0,40).map(x => {
+      const color = x.disc === 'run' ? '#22c55e' : x.disc === 'cycle' ? '#f97316' : x.disc === 'strength' ? '#a78bfa' : '#95a0b8';
+      return `<div class="card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span class="badge" style="background:rgba(255,255,255,.06);color:${color}">${x.subtype}</span>
+          <span style="font-size:12px;color:var(--mu)">W${x.week} · ${fmtDate(x.date)}</span>
+        </div>
+        <div style="font-weight:700;margin-bottom:8px">${x.actual}</div>
+        <div class="g4">
+          <div class="kpi"><div class="l">Run km</div><div class="v" style="font-size:18px">${x.runKm || '-'}</div></div>
+          <div class="kpi"><div class="l">Cycle km</div><div class="v" style="font-size:18px">${x.cycleKm || '-'}</div></div>
+          <div class="kpi"><div class="l">Duration</div><div class="v" style="font-size:18px">${x.dur || '-'}</div></div>
+          <div class="kpi"><div class="l">RPE</div><div class="v" style="font-size:18px">${x.rpe || '-'}</div></div>
+        </div>
+        ${x.notes ? `<div style="font-size:12px;color:var(--mu);margin-top:8px">${x.notes.slice(0,180)}${x.notes.length>180?'…':''}</div>` : ''}
+      </div>`;
+    }).join('') : '<div class="empty"><div style="font-size:38px">📋</div><div>No completed sessions yet</div></div>'}
+  `;
+}
+
 function planPage(cw) {
-  var days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  var html = '<div style="font-size:20px;font-weight:600;margin-bottom:4px">Training Plan</div>' +
-    '<div style="font-size:13px;color:var(--mu);margin-bottom:20px">25 weeks - currently Week ' + cw + '</div>';
-
-  for (var i = 0; i < PLAN.length; i++) {
-    var row = PLAN[i];
-    var isCur = row[0] === cw;
-    var sd = new Date(row[1]).toLocaleDateString('en-IE',{day:'numeric',month:'short'});
-    html += '<div class="wcard' + (isCur ? ' cur' : '') + '" id="wk' + row[0] + '">' +
-      '<div class="wh" onclick="toggleWeek(' + row[0] + ')">' +
-        '<div class="whl">' +
-          '<span class="wn" style="color:' + (isCur ? 'var(--te)' : 'var(--tx)') + '">' + row[0] + (isCur ? ' - now' : '') + '</span>' +
-          '<span class="wdt">' + sd + '</span>' +
-          '<span class="wpt">' + row[9] + '</span>' +
-        '</div>' +
-        '<span class="wch" id="wch' + row[0] + '">' + (isCur ? '&#9652;' : '&#9662;') + '</span>' +
-      '</div>' +
-      '<div class="wb" id="wb' + row[0] + '" style="display:' + (isCur ? 'block' : 'none') + '">';
-    for (var j = 0; j < days.length; j++) {
-      html += '<div class="wr"><span class="wrd">' + days[j] + '</span><span class="wrs">' + row[j+2] + '</span></div>';
-    }
-    html += '</div></div>';
-  }
-  return html;
+  const body = document.getElementById('body');
+  body.innerHTML = `
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px">Periodized plan</div>
+    <div style="font-size:13px;color:var(--mu);margin-bottom:18px">Upgraded for 10k performance, bike durability, and half-marathon specificity.</div>
+    ${PLAN.map(p => `
+      <div class="wcard" id="wk${p.week}">
+        <div class="wh" onclick="toggleWeek(${p.week})">
+          <div class="whl">
+            <span class="wn" style="color:${p.week===cw?'var(--te)':'var(--tx)'}">W${p.week}${p.week===cw?' · now':''}</span>
+            <span class="wdt">${fmtShort(new Date(p.start))}–${fmtShort(new Date(p.end))}</span>
+            <span class="wpt">${p.phase}</span>
+          </div>
+          <span id="wch${p.week}" style="color:var(--mu)">${p.week===cw?'▲':'▼'}</span>
+        </div>
+        <div class="wb" id="wb${p.week}" style="display:${p.week===cw?'block':'none'}">
+          <div style="font-size:12px;color:var(--mu);padding:8px 0 4px">${p.goal}</div>
+          ${Object.entries(p.days).map(([d,s]) => `<div class="wr"><span class="wrd">${d}</span><span class="wrs">${s}</span></div>`).join('')}
+          <div class="wr"><span class="wrd">Focus</span><span class="wrs">${p.focus}</span></div>
+        </div>
+      </div>`).join('')}
+  `;
+  setTimeout(() => {
+    const el = document.getElementById('wk'+cw);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 120);
 }
-
-function scrollToCurWeek() {
-  setTimeout(function(){
-    var el = document.getElementById('wk' + curWeek());
-    if (el) el.scrollIntoView({behavior:'smooth',block:'start'});
-  }, 100);
-}
-
 function toggleWeek(w) {
-  var b = document.getElementById('wb'+w);
-  var c = document.getElementById('wch'+w);
+  const b = document.getElementById('wb'+w), c = document.getElementById('wch'+w);
   if (!b) return;
-  var open = b.style.display !== 'none';
+  const open = b.style.display !== 'none';
   b.style.display = open ? 'none' : 'block';
-  c.innerHTML = open ? '&#9662;' : '&#9652;';
+  c.textContent = open ? '▼' : '▲';
 }
 
-// ── RACES ──────────────────────────────────────────────────────────────────
-function racesPage() {
-  var races = [
-    { color:'var(--te)', name:'Killarney 10k', date:'Saturday 9 May 2026', week:8,
-      pacing:[['0-3km','Controlled start, build into pace'],['Middle km','Settle and hold effort'],['Final km','Push hard if feeling strong']],
-      raceweek:['Warm-up: 10-15 min jog + drills + 3-4 strides','Race week: light strength Mon, 4x800m Wed at race pace','Day before: 20-30 min easy or full rest','Avoid: hard gym, extra mileage, testing fitness'] },
-    { color:'var(--or)', name:'Ring of Kerry Cycle', date:'Saturday 4 July 2026', week:15,
-      pacing:[['Start','Conservative - ride well below ego'],['Fuel','60-90g carbs/hr from first 30 min'],['Fluid','500-750ml/hr, 500-700mg sodium/hr'],['Rule','Never chase groups above your plan']],
-      raceweek:['Short easy sessions only - legs must feel fresh','Wed: easy 45min spin + 2-3 cadence lifts only','Day before: easy check spin 20min or full rest','Warm-up: first 20 min of the ride IS your warm-up'] },
-    { color:'var(--pu)', name:'Dingle Half Marathon', date:'Saturday 5 September 2026', week:24,
-      pacing:[['0-5km','Conservative 5:05-5:10/km'],['5-15km','Settle at race rhythm'],['15-21km','Build if strong - target 5:00/km avg'],['Goal','1:45 finish']],
-      raceweek:['Warm-up: 12-15 min jog + mobility + 3 strides','Race week: 4x800m Wed at threshold/race rhythm','Day before: easy shakeout + 3 strides, or rest','Higher carbs day before - small gel only if practiced','Avoid: poor sleep, long standing, starting too fast'] }
-  ];
-
-  var html = '<div style="font-size:20px;font-weight:600;margin-bottom:4px">Race Guides</div>' +
-    '<div style="font-size:13px;color:var(--mu);margin-bottom:20px">Pacing, fuelling and race week strategy</div>';
-
-  for (var i = 0; i < races.length; i++) {
-    var r = races[i];
-    html += '<div class="card">' +
-      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">' +
-        '<div style="width:10px;height:10px;border-radius:50%;background:' + r.color + ';flex-shrink:0"></div>' +
-        '<div><div style="font-size:15px;font-weight:600">' + r.name + '</div>' +
-        '<div style="font-size:11px;color:var(--mu)">' + r.date + ' - Week ' + r.week + '</div></div>' +
-      '</div>' +
-      '<div class="ct">Pacing</div>';
-    for (var j = 0; j < r.pacing.length; j++) {
-      html += '<div class="rgr"><strong>' + r.pacing[j][0] + '</strong> - ' + r.pacing[j][1] + '</div>';
-    }
-    html += '<div class="ct" style="margin-top:14px">Race week</div>';
-    for (var j = 0; j < r.raceweek.length; j++) {
-      html += '<div class="rwr">' + r.raceweek[j] + '</div>';
-    }
-    html += '</div>';
-  }
-  return html;
+function racesPage(ws, qm) {
+  const body = document.getElementById('body');
+  body.innerHTML = `
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px">Race readiness</div>
+    <div style="font-size:13px;color:var(--mu);margin-bottom:18px">Readiness is inferred from the work relevant to each event, not from generic mileage alone.</div>
+    ${RACES.map(r => {
+      const rr = raceReadiness(r.name, ws, qm);
+      return `<div class="race">
+        <div class="nm">${r.name}</div>
+        <div class="dt">${r.date.toLocaleDateString('en-IE', {weekday:'long', day:'numeric', month:'short', year:'numeric'})} · ${daysUntil(r.date)} days</div>
+        <div class="race-grid">
+          <div class="rmini"><div class="l">Target</div><div class="v">${r.target}</div></div>
+          <div class="rmini"><div class="l">Readiness</div><div class="v">${rr.score}</div></div>
+          <div class="rmini"><div class="l">Driver</div><div class="v" style="font-size:12px">${rr.driver}</div></div>
+        </div>
+        <div class="ins ins-blue" style="margin-bottom:0"><div class="ic">🔵</div><div><div class="tt">Execution priority</div><div>${r.focus}</div></div></div>
+      </div>`;
+    }).join('')}
+  `;
 }
 
-// ── SETUP ──────────────────────────────────────────────────────────────────
-function setupPage(first) {
-  return '<div style="max-width:480px;margin:0 auto">' +
-    '<div style="font-size:20px;font-weight:600;margin-bottom:4px">' + (first ? 'Setup Required' : 'Setup') + '</div>' +
-    '<div style="font-size:13px;color:var(--mu);margin-bottom:20px">' + (first ? 'Connect your Google Sheet to activate the dashboard' : 'Update your Google Apps Script URL') + '</div>' +
-    '<div class="setup-step"><div class="setup-num">1</div><div class="setup-body"><strong>Open your Google Sheet</strong> then go to <strong>Extensions</strong> then <strong>Apps Script</strong></div></div>' +
-    '<div class="setup-step"><div class="setup-num">2</div><div class="setup-body">Paste in the <code>google_apps_script.gs</code> code and click <strong>Save</strong></div></div>' +
-    '<div class="setup-step"><div class="setup-num">3</div><div class="setup-body">Click <strong>Deploy</strong> then <strong>New deployment</strong><br>Type: <strong>Web app</strong><br>Execute as: <strong>Me</strong><br>Who has access: <strong>Anyone</strong><br>Click Deploy and authorise when prompted</div></div>' +
-    '<div class="setup-step"><div class="setup-num">4</div><div class="setup-body">Copy the <strong>Web app URL</strong> (ends in /exec) and paste below</div></div>' +
-    '<div class="fld"><label>Google Apps Script URL</label>' +
-    '<input type="url" id="url-inp" placeholder="https://script.google.com/macros/s/..." value="' + APIURL + '" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:var(--rs);padding:12px 14px;color:var(--tx);font-size:13px;outline:none;margin-top:6px">' +
-    '</div>' +
-    '<button class="btn-conn" onclick="saveUrl()">Save and Connect</button>' +
-    (APIURL ? '<button class="btn-ref" style="width:100%;margin-top:10px;justify-content:center" onclick="refreshData()">&#8635; Refresh data from Google Sheets</button>' : '') +
-    '<div style="margin-top:20px;padding:14px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);font-size:12px;color:var(--mu);line-height:1.7">' +
-    '<strong style="color:var(--tx)">How it works:</strong><br>' +
-    'Paul logs sessions in the <strong>Training_Log</strong> tab by marking Completed? as <strong>Yes</strong> and filling in actuals. The dashboard reads from the sheet automatically.</div>' +
-  '</div>';
-}
-
-function saveUrl() {
-  var el = document.getElementById('url-inp');
-  if (!el) return;
-  var url = el.value.trim();
-  if (!url || url.indexOf('https://') !== 0) { toast('Please enter a valid URL', '#e84545'); return; }
-  APIURL = url;
-  localStorage.setItem(SKEY, url);
-  DATA = [];
-  toast('Saved! Loading data...');
-  go('overview');
-}
-
-// ── INIT ───────────────────────────────────────────────────────────────────
 go('overview');
-setInterval(function(){ if (LAST_TIME) setSyncBadge('ok'); }, 60000);
 </script>
 </body>
 </html>
